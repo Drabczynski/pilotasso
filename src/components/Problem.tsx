@@ -21,7 +21,7 @@ export default function Problem() {
             <h2 className="text-3xl font-semibold leading-[1.08] tracking-display text-ink sm:text-4xl lg:text-5xl">
               Combien de{' '}
               <span className="bg-[linear-gradient(transparent_62%,#bef264_62%)] px-1">fichiers</span> devez-vous
-              ouvrir pour savoir où en est votre association ?
+              ouvrir pour savoir où en est votre association ?
             </h2>
           </Reveal>
           <Reveal delay={240} className="mt-6 max-w-xl">

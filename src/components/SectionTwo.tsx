@@ -25,7 +25,7 @@ export default function SectionTwo() {
       </Reveal>
       <Reveal from="left" delay={240} className="mt-6">
         <Lead>
-          Finances, financements, activité et gouvernance : chaque décision part d'une information à jour, sans
+          Finances, financements, activité et gouvernance : chaque décision part d'une information à jour, sans
           naviguer entre dix outils.
         </Lead>
       </Reveal>

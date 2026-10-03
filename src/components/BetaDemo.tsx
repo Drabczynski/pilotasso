@@ -49,10 +49,10 @@ export default function BetaDemo() {
               Démo personnalisée
             </p>
             <h2 className="relative mx-auto mt-5 max-w-3xl text-3xl font-semibold leading-[1.08] tracking-display text-white sm:text-4xl lg:text-5xl">
-              Et si vous pilotiez enfin votre association depuis un seul endroit ?
+              Et si vous pilotiez enfin votre association depuis un seul endroit ?
             </h2>
             <p className="relative mx-auto mt-6 max-w-2xl text-base leading-relaxed tracking-snug text-white/70 sm:text-lg">
-              Pas de discours commercial générique : une démonstration construite autour de vos données et de vos
+              Pas de discours commercial générique : une démonstration construite autour de vos données et de vos
               priorités. 30 minutes suffisent pour voir si PilotAsso répond à vos besoins.
             </p>
 

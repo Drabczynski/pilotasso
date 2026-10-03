@@ -51,16 +51,16 @@ export default function DashboardMock() {
               <div className="flex items-start justify-between gap-6">
                 <div className="min-w-0 flex-1">
                   <p className="text-[11px] text-white/55">Consommation du budget</p>
-                  <p className="mt-1 text-3xl font-semibold tracking-heading text-white">72 %</p>
+                  <p className="mt-1 text-3xl font-semibold tracking-heading text-white">72 %</p>
                   <div className="mt-3 h-1.5 overflow-hidden rounded-full bg-white/10">
                     <div className="h-full w-[72%] rounded-full bg-gradient-to-r from-sky-400 to-emerald-300" />
                   </div>
-                  <p className="mt-2 text-[11px] text-white/50">52 600 € réalisés · 20 600 € restants</p>
+                  <p className="mt-2 text-[11px] text-white/50">52 600 € réalisés · 20 600 € restants</p>
                 </div>
                 <div className="text-right">
                   <p className="text-[11px] text-white/55">Résultat net 2026</p>
                   <p className="mt-1 text-2xl font-semibold tracking-heading text-emerald-300 sm:text-3xl">
-                    +18 250 €
+                    +18 250 €
                   </p>
                   <span className="mt-2 inline-block rounded-full bg-emerald-400/15 px-2 py-0.5 text-[10px] text-emerald-200">
                     Excédent
@@ -109,7 +109,7 @@ export default function DashboardMock() {
                 </p>
               </Tile>
               <Tile label="Financeurs" value="5">
-                <p className="mt-3 text-[10px] text-white/45">actifs · 102 k€</p>
+                <p className="mt-3 text-[10px] text-white/45">actifs · 102 k€</p>
               </Tile>
             </div>
           </div>
@@ -127,7 +127,7 @@ export default function DashboardMock() {
             <Sparkles size={13} className="text-amber-200" /> Nouvelle opportunité
           </div>
           <p className="mt-2 text-sm font-medium leading-snug tracking-snug text-white">
-            Appel à projets « Vie associative locale »
+            Appel à projets « Vie associative locale »
           </p>
           <div className="mt-3 flex items-center justify-between text-[11px]">
             <span className="flex items-center gap-1 text-white/60">
@@ -147,7 +147,7 @@ export default function DashboardMock() {
           <div className="flex items-center gap-2 text-[11px] font-medium text-white/70">
             <TrendingUp size={13} className="text-sky-200" /> Trésorerie prévisionnelle
           </div>
-          <p className="mt-1.5 text-2xl font-semibold tracking-heading text-white">+24 800 €</p>
+          <p className="mt-1.5 text-2xl font-semibold tracking-heading text-white">+24 800 €</p>
           <svg viewBox="0 0 120 32" className="mt-2 h-8 w-full" fill="none">
             <path
               d="M0 26 L15 22 L30 24 L45 17 L60 19 L75 12 L90 14 L105 7 L120 4"
@@ -164,7 +164,7 @@ export default function DashboardMock() {
       <Reveal from="left" delay={1300} className="absolute -bottom-5 left-[22%] hidden lg:block">
         <div className="animate-float-slow flex items-center gap-2 rounded-full border border-white/20 bg-white/15 px-4 py-2 text-xs text-white shadow-2xl backdrop-blur-xl">
           <AlertTriangle size={13} className="text-amber-200" />
-          Écart de 8 % sur le poste « Événements »
+          Écart de 8 % sur le poste « Événements »
         </div>
       </Reveal>
     </div>

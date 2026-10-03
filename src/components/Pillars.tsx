@@ -18,7 +18,7 @@ const pillars: { icon: LucideIcon; title: string; body: string; points: string[]
   {
     icon: Zap,
     title: 'Les tâches répétitives',
-    body: 'L’automatisation libère vos équipes : moins de temps à rassembler l’information, plus de temps pour décider.',
+    body: 'L’automatisation libère vos équipes : moins de temps à rassembler l’information, plus de temps pour décider.',
     points: ['Moins de saisie manuelle', 'Aide intelligente à la recherche', 'Préparation des bilans plus rapide'],
   },
 ];

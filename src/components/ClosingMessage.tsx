@@ -20,7 +20,7 @@ export default function ClosingMessage() {
         </p>
       </Reveal>
       <Reveal from="right" delay={240} className="mt-5">
-        <Lead>Le temps gagné sur les tableurs revient à ce qui compte : vos bénévoles, vos projets, vos publics.</Lead>
+        <Lead>Le temps gagné sur les tableurs revient à ce qui compte : vos bénévoles, vos projets, vos publics.</Lead>
       </Reveal>
     </div>
   );

@@ -9,7 +9,7 @@ const photoUrl = (w: number) => `${PHOTO}?auto=format&fit=crop&w=${w}&q=80`;
 // TODO: placeholder testimonial (fictional association and person).
 // Replace with a real, approved quote from a beta association before going live.
 const QUOTE = {
-  text: 'Avant, préparer un conseil d’administration nous prenait trois soirées de tableurs. Aujourd’hui, une heure suffit. Le reste du temps, on le passe là où ça compte : sur le terrain, avec les familles qu’on accompagne.',
+  text: 'Avant, préparer un conseil d’administration nous prenait trois soirées de tableurs. Aujourd’hui, une heure suffit. Le reste du temps, on le passe là où ça compte : sur le terrain, avec les familles qu’on accompagne.',
   name: 'Claire Martin',
   role: 'Trésorière bénévole · Les Jardins du Lien',
   initials: 'CM',
@@ -91,7 +91,7 @@ export default function Testimonial() {
           </Reveal>
         </figure>
         <p className="absolute bottom-4 right-5 text-[10px] text-white/40 sm:right-8 md:right-12">
-          Photo : Minh Nguyen / Unsplash
+          Photo : Minh Nguyen / Unsplash
         </p>
       </div>
     </section>
