@@ -3,29 +3,23 @@ import { useEffect, useRef, useState } from 'react';
 export const HERO_VIDEO_URL =
   'https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260729_102822_0e6c87e8-c141-4744-bf32-ad30db296371.mp4';
 
-const MAX_FRAMES = 90;
 const MIN_FRAMES = 24;
-const FRAMES_PER_SECOND = 12;
-const MAX_FRAME_WIDTH = 960;
+const FRAMES_PER_SECOND = 24;
 const LERP = 0.12;
 
-function scrollProgress() {
-  const max = document.documentElement.scrollHeight - window.innerHeight;
-  if (max <= 0) return 0;
-  return Math.min(1, Math.max(0, window.scrollY / max));
+function isSmallScreen() {
+  return window.innerWidth < 768;
 }
 
-function drawCover(
-  ctx: CanvasRenderingContext2D,
-  source: CanvasImageSource,
-  sw: number,
-  sh: number,
-  cw: number,
-  ch: number,
-) {
-  const scale = Math.max(cw / sw, ch / sh);
-  const dw = sw * scale;
-  const dh = sh * scale;
+/** Fewer, smaller frames on phones to keep memory in check. */
+function frameBudget() {
+  return isSmallScreen() ? { maxFrames: 90, maxWidth: 640 } : { maxFrames: 120, maxWidth: 854 };
+}
+
+function drawCover(ctx: CanvasRenderingContext2D, source: ImageBitmap, cw: number, ch: number) {
+  const scale = Math.max(cw / source.width, ch / source.height);
+  const dw = source.width * scale;
+  const dh = source.height * scale;
   ctx.drawImage(source, (cw - dw) / 2, (ch - dh) / 2, dw, dh);
 }
 
@@ -48,30 +42,43 @@ function waitFor(el: HTMLMediaElement, event: string) {
   });
 }
 
+/**
+ * Download the whole file once so every seek is local. Falls back to the
+ * remote URL if the CDN refuses cross-origin fetches.
+ */
+async function loadLocalSource(src: string) {
+  try {
+    const res = await fetch(src);
+    if (!res.ok) throw new Error(String(res.status));
+    return URL.createObjectURL(await res.blob());
+  } catch {
+    return null;
+  }
+}
+
 async function extractFrames(src: string, signal: { cancelled: boolean }) {
+  const { maxFrames, maxWidth } = frameBudget();
   const video = document.createElement('video');
   video.muted = true;
   video.playsInline = true;
   video.preload = 'auto';
   video.src = src;
 
-  await waitFor(video, 'loadedmetadata');
+  await waitFor(video, 'loadeddata');
   const duration = video.duration;
   if (!Number.isFinite(duration) || duration <= 0) throw new Error('no duration');
 
-  const count = Math.min(MAX_FRAMES, Math.max(MIN_FRAMES, Math.round(duration * FRAMES_PER_SECOND)));
-  const scale = Math.min(1, MAX_FRAME_WIDTH / video.videoWidth);
-  const width = Math.round(video.videoWidth * scale);
-  const height = Math.round(video.videoHeight * scale);
+  const count = Math.min(maxFrames, Math.max(MIN_FRAMES, Math.round(duration * FRAMES_PER_SECOND)));
+  const scale = Math.min(1, maxWidth / video.videoWidth);
+  const resizeWidth = Math.round(video.videoWidth * scale);
+  const resizeHeight = Math.round(video.videoHeight * scale);
 
   const frames: ImageBitmap[] = [];
   for (let i = 0; i < count; i++) {
     if (signal.cancelled) break;
     video.currentTime = (i / (count - 1)) * (duration - 0.05);
     await waitFor(video, 'seeked');
-    frames.push(
-      await createImageBitmap(video, { resizeWidth: width, resizeHeight: height, resizeQuality: 'medium' }),
-    );
+    frames.push(await createImageBitmap(video, { resizeWidth, resizeHeight, resizeQuality: 'medium' }));
   }
 
   video.removeAttribute('src');
@@ -83,13 +90,32 @@ export default function ScrollVideo() {
   const videoRef = useRef<HTMLVideoElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const framesRef = useRef<ImageBitmap[] | null>(null);
+  const [src, setSrc] = useState<string | null>(null);
   const [hasFrame, setHasFrame] = useState(false);
   const [framesReady, setFramesReady] = useState(false);
 
-  // Build the frame cache once the visible video has decoded its first frame.
+  // 1. Resolve the source: local blob when possible, remote URL otherwise.
+  useEffect(() => {
+    let cancelled = false;
+    let objectUrl: string | null = null;
+    loadLocalSource(HERO_VIDEO_URL).then((local) => {
+      if (cancelled) {
+        if (local) URL.revokeObjectURL(local);
+        return;
+      }
+      objectUrl = local;
+      setSrc(local ?? HERO_VIDEO_URL);
+    });
+    return () => {
+      cancelled = true;
+      if (objectUrl) URL.revokeObjectURL(objectUrl);
+    };
+  }, []);
+
+  // 2. Once the visible video has a frame, build the frame cache from the same source.
   useEffect(() => {
     const video = videoRef.current;
-    if (!video) return;
+    if (!video || !src) return;
     const signal = { cancelled: false };
 
     const start = async () => {
@@ -97,7 +123,7 @@ export default function ScrollVideo() {
       await new Promise((r) => setTimeout(r, 300));
       if (signal.cancelled) return;
       try {
-        const frames = await extractFrames(HERO_VIDEO_URL, signal);
+        const frames = await extractFrames(src, signal);
         if (signal.cancelled || frames.length === 0) {
           frames.forEach((f) => f.close());
           return;
@@ -118,41 +144,61 @@ export default function ScrollVideo() {
       framesRef.current?.forEach((f) => f.close());
       framesRef.current = null;
     };
-  }, []);
+  }, [src]);
 
-  // Scroll → smoothed progress → canvas frame or video seek.
+  // 3. Scroll → smoothed progress → blended canvas frames, or video seek as fallback.
   useEffect(() => {
     const canvas = canvasRef.current;
-    const video = videoRef.current;
-    if (!canvas || !video) return;
-    const ctx = canvas.getContext('2d');
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d', { alpha: false });
     if (!ctx) return;
 
-    let smoothed = scrollProgress();
-    let lastIndex = -1;
+    let maxScroll = 1;
+    const measure = () => {
+      maxScroll = Math.max(1, document.documentElement.scrollHeight - window.innerHeight);
+    };
+    const progress = () => Math.min(1, Math.max(0, window.scrollY / maxScroll));
+
+    let smoothed = 0;
+    let lastDrawn = -1;
     let raf = 0;
 
     const resize = () => {
       const dpr = Math.min(window.devicePixelRatio || 1, 2);
       canvas.width = Math.round(window.innerWidth * dpr);
       canvas.height = Math.round(window.innerHeight * dpr);
-      lastIndex = -1;
+      ctx.imageSmoothingQuality = 'high';
+      measure();
+      lastDrawn = -1;
     };
     resize();
+    smoothed = progress();
     window.addEventListener('resize', resize);
+    // Page height changes as fonts/images load.
+    const ro = new ResizeObserver(measure);
+    ro.observe(document.body);
 
     const tick = () => {
-      smoothed += (scrollProgress() - smoothed) * LERP;
+      smoothed += (progress() - smoothed) * LERP;
       const frames = framesRef.current;
+      const video = videoRef.current;
 
       if (frames && frames.length > 0) {
-        const index = Math.round(smoothed * (frames.length - 1));
-        if (index !== lastIndex) {
-          const frame = frames[index];
-          drawCover(ctx, frame, frame.width, frame.height, canvas.width, canvas.height);
-          lastIndex = index;
+        if (Math.abs(smoothed - lastDrawn) > 0.00005) {
+          // Crossfade the two neighbouring frames so motion reads as continuous.
+          const pos = smoothed * (frames.length - 1);
+          const i = Math.floor(pos);
+          const t = pos - i;
+          ctx.globalAlpha = 1;
+          drawCover(ctx, frames[i], canvas.width, canvas.height);
+          if (t > 0.01 && i + 1 < frames.length) {
+            ctx.globalAlpha = t;
+            drawCover(ctx, frames[i + 1], canvas.width, canvas.height);
+            ctx.globalAlpha = 1;
+          }
+          lastDrawn = smoothed;
         }
-      } else if (video.readyState >= 1 && Number.isFinite(video.duration)) {
+      } else if (video && video.readyState >= 1 && Number.isFinite(video.duration)) {
         const target = smoothed * (video.duration - 0.05);
         if (!video.seeking && Math.abs(video.currentTime - target) > 0.04) {
           video.currentTime = target;
@@ -165,6 +211,7 @@ export default function ScrollVideo() {
 
     return () => {
       cancelAnimationFrame(raf);
+      ro.disconnect();
       window.removeEventListener('resize', resize);
     };
   }, []);
@@ -181,16 +228,18 @@ export default function ScrollVideo() {
             'radial-gradient(60% 50% at 62% 42%, rgba(245,170,90,0.28) 0%, rgba(245,170,90,0) 60%), radial-gradient(90% 80% at 30% 20%, #7d8a99 0%, #4a5562 45%, #1d232b 100%)',
         }}
       />
-      <video
-        ref={videoRef}
-        className={`absolute inset-0 h-full w-full object-cover transition-opacity duration-500 ${
-          hasFrame && !framesReady ? 'opacity-100' : 'opacity-0'
-        }`}
-        src={HERO_VIDEO_URL}
-        muted
-        playsInline
-        preload="auto"
-      />
+      {src && (
+        <video
+          ref={videoRef}
+          className={`absolute inset-0 h-full w-full object-cover transition-opacity duration-500 ${
+            hasFrame && !framesReady ? 'opacity-100' : 'opacity-0'
+          }`}
+          src={src}
+          muted
+          playsInline
+          preload="auto"
+        />
+      )}
       <canvas
         ref={canvasRef}
         className={`absolute inset-0 h-full w-full transition-opacity duration-500 ${
