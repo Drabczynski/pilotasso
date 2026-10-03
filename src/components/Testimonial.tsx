@@ -1,10 +1,6 @@
 import { useEffect, useRef } from 'react';
 import Reveal from './Reveal';
 
-// Unsplash photo by Minh Nguyen — free to use under the Unsplash License.
-// https://unsplash.com/photos/group-of-people-by-trees-during-golden-hour-L2nnpyQUISA
-const PHOTO = 'https://images.unsplash.com/photo-1578472009858-7301ca659179';
-const photoUrl = (w: number) => `${PHOTO}?auto=format&fit=crop&w=${w}&q=80`;
 
 // TODO: placeholder testimonial (fictional association and person).
 // Replace with a real, approved quote from a beta association before going live.
@@ -56,16 +52,16 @@ export default function Testimonial() {
     >
       <img
         ref={imgRef}
-        src={photoUrl(1920)}
-        srcSet={`${photoUrl(960)} 960w, ${photoUrl(1600)} 1600w, ${photoUrl(2400)} 2400w`}
+        src="/images/temoignage.jpg"
+        srcSet="/images/temoignage-960.jpg 960w, /images/temoignage.jpg 1912w"
         sizes="100vw"
-        alt="Un groupe de bénévoles réunis entre les arbres, dans la lumière dorée de fin de journée"
+        alt="Une bénévole souriante à son bureau, dans les locaux de l’association"
         loading="lazy"
-        className="absolute inset-0 h-full w-full scale-[1.15] object-cover will-change-transform"
+        className="absolute inset-0 h-full w-full scale-[1.15] object-cover object-[68%_center] will-change-transform"
       />
       <div
         aria-hidden
-        className="absolute inset-0 bg-[linear-gradient(to_top,rgba(5,10,20,0.92)_0%,rgba(5,10,20,0.55)_45%,rgba(5,10,20,0.15)_100%)]"
+        className="absolute inset-0 bg-[linear-gradient(to_top,rgba(5,10,20,0.9)_0%,rgba(5,10,20,0.35)_45%,rgba(5,10,20,0.1)_100%)] lg:bg-[linear-gradient(to_right,rgba(5,10,20,0.92)_0%,rgba(5,10,20,0.7)_35%,rgba(5,10,20,0.1)_62%,transparent_100%)]"
       />
 
       <div className="relative w-full px-5 pb-16 pt-40 sm:px-8 sm:pb-24 md:px-12">
@@ -75,8 +71,8 @@ export default function Testimonial() {
               “
             </span>
           </Reveal>
-          <Reveal as="blockquote" delay={150} className="mt-2 max-w-4xl">
-            <p className="text-legible text-2xl font-medium leading-[1.25] tracking-heading text-white sm:text-3xl lg:text-[2.6rem] lg:leading-[1.2]">
+          <Reveal as="blockquote" delay={150} className="mt-2 max-w-4xl lg:max-w-[46%]">
+            <p className="text-legible text-2xl font-medium leading-[1.25] tracking-heading text-white sm:text-3xl lg:text-[2.1rem] lg:leading-[1.22]">
               {QUOTE.text}
             </p>
           </Reveal>
@@ -90,9 +86,6 @@ export default function Testimonial() {
             </span>
           </Reveal>
         </figure>
-        <p className="absolute bottom-4 right-5 text-[10px] text-white/40 sm:right-8 md:right-12">
-          Photo : Minh Nguyen / Unsplash
-        </p>
       </div>
     </section>
   );
