@@ -3,6 +3,7 @@ import { Banknote, ChevronRight, FileSpreadsheet, FileText, FolderOpen, Hexagon,
 import {
   AbsoluteFill,
   Easing,
+  Freeze,
   OffthreadVideo,
   Sequence,
   continueRender,
@@ -16,24 +17,35 @@ import {
 import DashboardMock from '../src/components/DashboardMock';
 import { RevealEnabled } from '../src/components/Reveal';
 
-export const PROMO_FPS = 30;
+// 24 fps = the source footage's own rate: every video frame is shown exactly once, no judder.
+export const PROMO_FPS = 24;
 
 // Scene timeline, in frames. Neighbouring scenes overlap by FADE frames for crossfades.
-const FADE = 14;
+const FADE = 12;
 const SCENES = {
-  files: { from: 0, len: 120 },
-  lidar: { from: 106, len: 194 },
-  dashboard: { from: 286, len: 224 },
-  office: { from: 496, len: 194 },
-  beta: { from: 676, len: 104 },
-  end: { from: 766, len: 134 },
+  files: { from: 0, len: 96 },
+  lidar: { from: 84, len: 106 },
+  dashboard: { from: 178, len: 156 },
+  office: { from: 322, len: 132 },
+  beta: { from: 442, len: 72 },
+  end: { from: 502, len: 96 },
 };
 export const PROMO_DURATION = SCENES.end.from + SCENES.end.len;
 
 // hero.mp4 is 7.08 s: LiDAR scan until ~3.4 s, photographic office after.
 const VIDEO = staticFile('video/hero.mp4');
-const SCAN_END = 3.4 * PROMO_FPS;
-const VIDEO_END = 7.0 * PROMO_FPS;
+const SCAN_END = Math.round(3.4 * PROMO_FPS);
+const VIDEO_END = 168; // last frame of the 169-frame source
+
+/**
+ * Plays [from, to) of the source at real speed, then holds the last frame.
+ * Never slows the footage down, so nothing stutters.
+ */
+function Clip({ from, to }: { from: number; to: number }) {
+  const f = useCurrentFrame();
+  const video = <OffthreadVideo src={VIDEO} muted trimBefore={from} className="h-full w-full object-cover" />;
+  return f < to - from ? video : <Freeze frame={to - from - 1}>{video}</Freeze>;
+}
 
 const NB = ' ';
 
@@ -88,7 +100,7 @@ function FilesScene() {
   const f = useCurrentFrame();
   const { fps } = useVideoConfig();
   // Everything collapses into a single point at the end of the scene.
-  const collapse = interpolate(f, [86, 112], [0, 1], {
+  const collapse = interpolate(f, [68, 90], [0, 1], {
     extrapolateLeft: 'clamp',
     extrapolateRight: 'clamp',
     easing: Easing.in(Easing.cubic),
@@ -138,7 +150,7 @@ function LidarScene() {
   return (
     <AbsoluteFill className="bg-[#0a0a0a]">
       <AbsoluteFill style={{ transform: `scale(${zoom})` }}>
-        <OffthreadVideo src={VIDEO} muted playbackRate={SCAN_END / len} className="h-full w-full object-cover" />
+        <Clip from={0} to={SCAN_END} />
       </AbsoluteFill>
       <AbsoluteFill style={{ background: scrim }} />
       <AbsoluteFill
@@ -177,7 +189,9 @@ function DashboardScene() {
     <AbsoluteFill className="items-center justify-center overflow-hidden bg-[#0a0a0a]">
       {/* LiDAR floor, slowed down and dimmed, as a backdrop */}
       <AbsoluteFill style={{ opacity: 0.45, filter: 'blur(6px)' }}>
-        <OffthreadVideo src={VIDEO} muted playbackRate={0.25} className="h-full w-full object-cover" />
+        <Freeze frame={0}>
+          <OffthreadVideo src={VIDEO} muted trimBefore={SCAN_END - 1} className="h-full w-full object-cover" />
+        </Freeze>
       </AbsoluteFill>
       <AbsoluteFill
         style={{ background: 'radial-gradient(60% 55% at 50% 45%, rgba(18,48,90,0.55) 0%, rgba(10,10,10,0.9) 100%)' }}
@@ -222,13 +236,7 @@ function OfficeScene() {
   return (
     <AbsoluteFill className="bg-[#0a0a0a]">
       <AbsoluteFill style={{ transform: `scale(${zoom})` }}>
-        <OffthreadVideo
-          src={VIDEO}
-          muted
-          trimBefore={Math.round(SCAN_END)}
-          playbackRate={(VIDEO_END - SCAN_END) / len}
-          className="h-full w-full object-cover"
-        />
+        <Clip from={SCAN_END} to={VIDEO_END + 1} />
       </AbsoluteFill>
       <AbsoluteFill style={{ background: scrim }} />
       <AbsoluteFill
