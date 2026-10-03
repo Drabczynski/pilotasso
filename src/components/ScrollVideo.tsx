@@ -27,6 +27,12 @@ const RIBBONS = [
 ];
 const RIBBON_SEGMENT = 0.6; // visible share of the path while it travels
 
+/** Scales a path authored in the 1600 × 900 box to real pixels (x, y pairs alternate). */
+function scalePath(d: string, sx: number, sy: number) {
+  let i = 0;
+  return d.replace(/-?\d+(\.\d+)?/g, (n) => String(Math.round(Number(n) * (i++ % 2 === 0 ? sx : sy) * 10) / 10));
+}
+
 function smoothstep(x: number) {
   const t = Math.min(1, Math.max(0, x));
   return t * t * (3 - 2 * t);
@@ -116,6 +122,7 @@ export default function ScrollVideo() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const sharpRef = useRef<HTMLVideoElement>(null);
   const ribbonRefs = useRef<(SVGPathElement | null)[]>([]);
+  const ribbonSvgRef = useRef<SVGSVGElement>(null);
   const framesRef = useRef<ImageBitmap[] | null>(null);
   const [src, setSrc] = useState<string | null>(null);
   const [hasFrame, setHasFrame] = useState(false);
@@ -226,7 +233,25 @@ export default function ScrollVideo() {
       }
     };
 
+    // Ribbons are laid out in real pixels so dash lengths match what is on screen
+    // (a stretched viewBox made the tail outlive the animation on wide screens).
+    let ribbonLengths: number[] = [];
+    const layoutRibbons = () => {
+      const w = window.innerWidth;
+      const h = window.innerHeight;
+      ribbonSvgRef.current?.setAttribute('viewBox', `0 0 ${w} ${h}`);
+      ribbonLengths = RIBBONS.map((ribbon, i) => {
+        const path = ribbonRefs.current[i];
+        if (!path) return 0;
+        path.setAttribute('d', scalePath(ribbon.d, w / 1600, h / 900));
+        const len = path.getTotalLength();
+        path.style.strokeDasharray = `${len * RIBBON_SEGMENT} ${len * 3}`;
+        return len;
+      });
+    };
+
     const resize = () => {
+      layoutRibbons();
       const dpr = Math.min(window.devicePixelRatio || 1, 2);
       canvas.width = Math.round(window.innerWidth * dpr);
       canvas.height = Math.round(window.innerHeight * dpr);
@@ -250,8 +275,11 @@ export default function ScrollVideo() {
         if (!path) return;
         const [a, b] = ribbon.window;
         const t = smoothstep((smoothed - a) / (b - a));
-        path.style.strokeDashoffset = String(RIBBON_SEGMENT - t * (1 + RIBBON_SEGMENT));
+        const len = ribbonLengths[i] ?? 0;
+        // Segment slides from just before the start (t = 0) to just past the end (t = 1).
+        path.style.strokeDashoffset = String(len * (RIBBON_SEGMENT - t * (1 + RIBBON_SEGMENT)));
         path.style.transform = `translateY(${(t - 0.5) * 60}px)`;
+        path.style.opacity = t <= 0 || t >= 1 ? '0' : '1';
       });
 
       const frames = framesRef.current;
@@ -346,8 +374,8 @@ export default function ScrollVideo() {
         }}
       />
       <svg
+        ref={ribbonSvgRef}
         viewBox="0 0 1600 900"
-        preserveAspectRatio="none"
         className="absolute inset-0 h-full w-full"
         style={{ filter: 'drop-shadow(0 0 18px rgba(212,245,74,0.35))' }}
       >
@@ -362,10 +390,7 @@ export default function ScrollVideo() {
             stroke="#d4f54a"
             className="[stroke-width:9px] md:[stroke-width:14px]"
             strokeLinecap="round"
-            vectorEffect="non-scaling-stroke"
-            pathLength={1}
-            strokeDasharray={`${RIBBON_SEGMENT} 3`}
-            strokeDashoffset={RIBBON_SEGMENT}
+            opacity={0}
           />
         ))}
       </svg>
