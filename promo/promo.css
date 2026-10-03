@@ -1,0 +1,5 @@
+/* Frame-accurate rendering: no CSS-driven motion, Remotion drives everything. */
+.animate-float,
+.animate-float-slow {
+  animation: none !important;
+}

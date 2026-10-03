@@ -22,3 +22,12 @@ npm run build
 
 - La vidéo de fond est `public/video/hero.mp4` (sans audio, une image clé toutes les 4 images pour un scrub fluide) et son image de chargement `hero-poster.jpg`.
 - Le formulaire newsletter n'est pas encore relié à un service d'envoi.
+
+## Vidéo promo
+
+Montage motion design (Remotion) qui réutilise les composants du site : `promo/`.
+
+```bash
+npm run promo          # aperçu interactif (Remotion Studio)
+npm run promo:render   # rendu MP4 1080p dans promo/out/
+```

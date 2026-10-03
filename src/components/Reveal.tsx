@@ -1,4 +1,7 @@
-import { useEffect, useRef, useState, type ElementType, type ReactNode } from 'react';
+import { createContext, useContext, useEffect, useRef, useState, type ElementType, type ReactNode } from 'react';
+
+/** Set to false to render everything already revealed (e.g. in the promo video renderer). */
+export const RevealEnabled = createContext(true);
 
 type From = 'up' | 'left' | 'right' | 'scale';
 
@@ -18,12 +21,13 @@ const hidden: Record<From, string> = {
 };
 
 export default function Reveal({ as: Tag = 'div', delay = 0, from = 'up', className = '', children }: RevealProps) {
+  const enabled = useContext(RevealEnabled);
   const ref = useRef<HTMLElement>(null);
-  const [visible, setVisible] = useState(false);
+  const [visible, setVisible] = useState(!enabled);
 
   useEffect(() => {
     const el = ref.current;
-    if (!el) return;
+    if (!el || !enabled) return;
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
@@ -35,7 +39,7 @@ export default function Reveal({ as: Tag = 'div', delay = 0, from = 'up', classN
     );
     observer.observe(el);
     return () => observer.disconnect();
-  }, []);
+  }, [enabled]);
 
   const duration = from === 'up' ? 'duration-700' : 'duration-1000';
 

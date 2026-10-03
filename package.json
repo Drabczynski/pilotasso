@@ -6,7 +6,9 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "promo": "remotion studio",
+    "promo:render": "remotion render Promo promo/out/pilotasso-promo.mp4 --codec=h264 --crf=20"
   },
   "dependencies": {
     "@fontsource-variable/inter": "^5.3.0",
@@ -15,11 +17,14 @@
     "react-dom": "^18.3.1"
   },
   "devDependencies": {
+    "@remotion/cli": "^4.0.532",
+    "@remotion/tailwind": "^4.0.532",
     "@types/react": "^18.3.12",
     "@types/react-dom": "^18.3.1",
     "@vitejs/plugin-react": "^4.3.4",
     "autoprefixer": "^10.4.20",
     "postcss": "^8.4.49",
+    "remotion": "^4.0.532",
     "tailwindcss": "^3.4.15",
     "typescript": "^5.6.3",
     "vite": "^5.4.11"
