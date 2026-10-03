@@ -1,9 +1,10 @@
 import { useEffect, useState, type ReactNode } from 'react';
-import { Banknote, ChevronRight, FileSpreadsheet, FileText, FolderOpen, Hexagon, Search, Zap } from 'lucide-react';
+import { ArrowRight, Banknote, ChevronRight, FileSpreadsheet, FileText, FolderOpen, Hexagon, Search, Zap } from 'lucide-react';
 import {
   AbsoluteFill,
   Easing,
   Freeze,
+  Img,
   OffthreadVideo,
   Sequence,
   continueRender,
@@ -22,13 +23,18 @@ export const PROMO_FPS = 24;
 
 // Scene timeline, in frames. Neighbouring scenes overlap by FADE frames for crossfades.
 const FADE = 12;
-const SCENES = {
+const CUT = 5; // near-cut between the brand "posters"
+const SCENES: Record<string, { from: number; len: number; fade?: number }> = {
   files: { from: 0, len: 96 },
   lidar: { from: 84, len: 106 },
   dashboard: { from: 178, len: 156 },
   office: { from: 322, len: 132 },
-  beta: { from: 442, len: 72 },
-  end: { from: 502, len: 96 },
+  poster1: { from: 449, len: 64, fade: CUT },
+  poster2: { from: 508, len: 64, fade: CUT },
+  poster3: { from: 567, len: 64, fade: CUT },
+  poster4: { from: 626, len: 64, fade: CUT },
+  beta: { from: 685, len: 72, fade: CUT },
+  end: { from: 752, len: 120, fade: CUT },
 };
 export const PROMO_DURATION = SCENES.end.from + SCENES.end.len;
 
@@ -50,9 +56,9 @@ function Clip({ from, to }: { from: number; to: number }) {
 const NB = ' ';
 
 /** Fades its children in and out at the edges of the enclosing Sequence. */
-function Fade({ len, children }: { len: number; children: ReactNode }) {
+function Fade({ len, fade = FADE, children }: { len: number; fade?: number; children: ReactNode }) {
   const f = useCurrentFrame();
-  const opacity = interpolate(f, [0, FADE, len - FADE, len], [0, 1, 1, 0], {
+  const opacity = interpolate(f, [0, fade, len - fade, len], [0, 1, 1, 0], {
     extrapolateLeft: 'clamp',
     extrapolateRight: 'clamp',
   });
@@ -71,12 +77,15 @@ function Rise({ at = 0, children, distance = 40 }: { at?: number; children: Reac
   );
 }
 
-function Logo({ size = 28 }: { size?: number }) {
+/** Charter wordmark: « pilot asso » + signature. */
+function Logo({ size = 28, color = '#ffffff' }: { size?: number; color?: string }) {
   return (
-    <div className="flex items-center gap-2.5 text-white">
-      <Hexagon size={size} strokeWidth={1.5} />
-      <span className="font-medium tracking-tight" style={{ fontSize: size * 0.85 }}>
-        pilotasso
+    <div style={{ color }} className="inline-flex flex-col items-start leading-none">
+      <span className="font-bold tracking-display" style={{ fontSize: size * 1.15 }}>
+        pilot asso
+      </span>
+      <span className="mt-1 font-semibold uppercase" style={{ fontSize: size * 0.26, letterSpacing: '0.2em' }}>
+        Le pilotage des associations
       </span>
     </div>
   );
@@ -273,6 +282,134 @@ function OfficeScene() {
   );
 }
 
+
+/* ------------------------------------------------------- brand "posters" */
+
+const LIME = '#d4f54a';
+
+type Poster = {
+  bg: string;
+  ink: string; // colour of the first line, logo and subline
+  accent: string; // colour of the second line
+  lines: [string, string];
+  sub: string;
+  photo: string;
+  focus: string; // object-position of the photo
+  ribbon: string; // path in the 1920 × 1080 frame
+};
+
+const POSTERS: Poster[] = [
+  {
+    bg: '#f6b894',
+    ink: '#5b1631',
+    accent: '#5b1631',
+    lines: ['Vos projets avancent.', 'Gardez le fil.'],
+    sub: 'Une vue d’ensemble de vos projets, de vos financements et de votre activité.',
+    photo: 'promo/office-168.jpg',
+    focus: '52% 50%',
+    ribbon: 'M -40 610 C 240 520, 520 560, 600 700 C 660 820, 470 900, 420 790 C 360 650, 760 560, 1010 640 S 1500 760, 1980 470',
+  },
+  {
+    bg: '#0b1f44',
+    ink: '#ffffff',
+    accent: LIME,
+    lines: ['Voyez plus clair.', 'Décidez avec confiance.'],
+    sub: 'Finances, projets, activité : une vision d’ensemble pour vos décisions.',
+    photo: 'images/temoignage.jpg',
+    focus: '58% 40%',
+    ribbon: 'M -40 780 C 260 700, 460 860, 700 820 S 980 600, 1100 520 S 1600 380, 1980 420',
+  },
+  {
+    bg: '#0e4a36',
+    ink: '#ffffff',
+    accent: LIME,
+    lines: ['Moins de recherches.', 'Plus de temps pour agir.'],
+    sub: 'Retrouvez vos finances, vos projets et votre activité au même endroit.',
+    photo: 'promo/office-120.jpg',
+    focus: '30% 50%',
+    ribbon: 'M -40 900 C 200 860, 380 700, 520 760 C 640 810, 560 960, 450 900 C 330 830, 640 620, 980 640 S 1600 520, 1980 300',
+  },
+  {
+    bg: '#f1a6cf',
+    ink: '#0b1f44',
+    accent: '#0b1f44',
+    lines: ['Gardez le cap.', 'Faites avancer vos projets.'],
+    sub: 'Projets, financements, activité : les informations utiles, au même endroit.',
+    photo: 'promo/office-168.jpg',
+    focus: '18% 60%',
+    ribbon: 'M -40 520 C 300 600, 420 900, 640 860 S 900 620, 1060 700 S 1500 980, 1980 760',
+  },
+];
+
+function PosterScene({ poster }: { poster: Poster }) {
+  const f = useCurrentFrame();
+  const { fps } = useVideoConfig();
+  const photoIn = spring({ frame: f - 2, fps, config: { damping: 20, mass: 0.9 } });
+  const draw = interpolate(f, [4, 46], [1, 0], {
+    extrapolateLeft: 'clamp',
+    extrapolateRight: 'clamp',
+    easing: Easing.inOut(Easing.cubic),
+  });
+  const zoom = interpolate(f, [0, 64], [1.12, 1.02]);
+  return (
+    <AbsoluteFill style={{ background: poster.bg }}>
+      {/* photo, bottom right, rounded top-left corner like the posters */}
+      <div
+        className="absolute bottom-0 right-0 overflow-hidden rounded-tl-[56px]"
+        style={{ width: 900, height: 700, transform: `translate(${(1 - photoIn) * 420}px, ${(1 - photoIn) * 120}px)` }}
+      >
+        <Img
+          src={staticFile(poster.photo)}
+          className="h-full w-full object-cover"
+          style={{ objectPosition: poster.focus, transform: `scale(${zoom})` }}
+        />
+      </div>
+
+      {/* lime ribbon drawing itself, with its loop */}
+      <svg viewBox="0 0 1920 1080" className="absolute inset-0 h-full w-full" fill="none">
+        <path
+          d={poster.ribbon}
+          stroke={LIME}
+          strokeWidth={30}
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          pathLength={1}
+          strokeDasharray="1 1"
+          strokeDashoffset={draw}
+        />
+      </svg>
+
+      <div className="absolute left-[120px] top-[96px]" style={{ color: poster.ink }}>
+        <Rise at={0} distance={14}>
+          <Logo size={44} color={poster.ink} />
+        </Rise>
+        <div className="mt-16 max-w-[980px]">
+          <Rise at={4}>
+            <p className="text-[92px] font-bold leading-[1.02] tracking-display" style={{ color: poster.ink }}>
+              {poster.lines[0]}
+            </p>
+          </Rise>
+          <Rise at={10}>
+            <p className="text-[92px] font-bold leading-[1.02] tracking-display" style={{ color: poster.accent }}>
+              {poster.lines[1]}
+            </p>
+          </Rise>
+          <Rise at={16} distance={20}>
+            <p className="mt-7 max-w-[720px] text-[30px] font-medium leading-snug" style={{ color: poster.ink }}>
+              {poster.sub}
+            </p>
+          </Rise>
+        </div>
+      </div>
+    </AbsoluteFill>
+  );
+}
+
+const Poster1 = () => <PosterScene poster={POSTERS[0]} />;
+const Poster2 = () => <PosterScene poster={POSTERS[1]} />;
+const Poster3 = () => <PosterScene poster={POSTERS[2]} />;
+const Poster4 = () => <PosterScene poster={POSTERS[3]} />;
+
 function BetaScene() {
   const f = useCurrentFrame();
   const count = Math.round(
@@ -292,30 +429,44 @@ function BetaScene() {
 function EndScene() {
   const f = useCurrentFrame();
   const { fps } = useVideoConfig();
-  const glow = interpolate(f, [0, 60], [0.6, 1], { extrapolateRight: 'clamp' });
-  const cta = spring({ frame: f - 44, fps, config: { damping: 12 } });
+  const cta = spring({ frame: f - 30, fps, config: { damping: 12 } });
+  const draw = interpolate(f, [0, 50], [1, 0], {
+    extrapolateLeft: 'clamp',
+    extrapolateRight: 'clamp',
+    easing: Easing.inOut(Easing.cubic),
+  });
   return (
-    <AbsoluteFill className="items-center justify-center bg-ink text-center">
-      <div
-        className="absolute left-1/2 top-[18%] h-[600px] w-[1100px] -translate-x-1/2 rounded-full bg-lime-300/20 blur-[120px]"
-        style={{ opacity: glow }}
-      />
-      <Rise at={6}>
-        <Logo size={64} />
+    <AbsoluteFill className="items-center justify-center text-center" style={{ background: '#1652f0' }}>
+      <svg viewBox="0 0 1920 1080" className="absolute inset-0 h-full w-full" fill="none">
+        <path
+          d="M -40 960 C 320 900, 700 1040, 1100 990 C 1420 950, 1520 830, 1440 800 C 1340 770, 1360 960, 1560 960 S 1860 860, 1980 820"
+          stroke={LIME}
+          strokeWidth={30}
+          strokeLinecap="round"
+          pathLength={1}
+          strokeDasharray="1 1"
+          strokeDashoffset={draw}
+        />
+      </svg>
+      <Rise at={4}>
+        <Logo size={72} />
       </Rise>
-      <Rise at={20}>
-        <p className="mt-8 text-[64px] font-semibold leading-[1.08] tracking-display text-white">
-          Moins de fichiers.
+      <Rise at={14}>
+        <p className="mt-14 text-[76px] font-bold leading-[1.05] tracking-display text-white">
+          Découvrez Pilot Asso
           <br />
-          Plus de temps pour <span className="text-lime-300">votre{'\u00a0'}mission.</span>
+          <span style={{ color: LIME }}>en 30{' '}minutes.</span>
         </p>
       </Rise>
       <div style={{ transform: `scale(${0.85 + cta * 0.15})`, opacity: cta }}>
-        <div className="mt-14 inline-flex items-center gap-2 rounded-full bg-lime-300 px-12 py-6 text-[32px] font-medium tracking-snug text-black shadow-[0_0_80px_-10px_rgba(190,242,100,0.7)]">
-          Réservez votre démo gratuite
-          <ChevronRight size={34} />
+        <div className="mt-12 inline-flex items-center gap-3 rounded-2xl px-12 py-6 text-[34px] font-semibold tracking-snug text-ink" style={{ background: LIME }}>
+          Réservez votre démo
+          <ArrowRight size={34} />
         </div>
       </div>
+      <Rise at={44}>
+        <p className="mt-8 text-[30px] font-semibold text-white">pilotasso.com</p>
+      </Rise>
     </AbsoluteFill>
   );
 }
@@ -329,11 +480,15 @@ export function Promo() {
     document.fonts.ready.then(() => continueRender(handle));
   }, [handle]);
 
-  const scenes: [keyof typeof SCENES, () => JSX.Element][] = [
+  const scenes: [string, () => JSX.Element][] = [
     ['files', FilesScene],
     ['lidar', LidarScene],
     ['dashboard', DashboardScene],
     ['office', OfficeScene],
+    ['poster1', Poster1],
+    ['poster2', Poster2],
+    ['poster3', Poster3],
+    ['poster4', Poster4],
     ['beta', BetaScene],
     ['end', EndScene],
   ];
@@ -341,10 +496,10 @@ export function Promo() {
   return (
     <AbsoluteFill className="bg-[#0a0a0a] font-sans">
       {scenes.map(([key, Scene]) => {
-        const { from, len } = SCENES[key];
+        const { from, len, fade } = SCENES[key];
         return (
           <Sequence key={key} from={from} durationInFrames={len} name={key}>
-            <Fade len={len}>
+            <Fade len={len} fade={fade}>
               <Scene />
             </Fade>
           </Sequence>
