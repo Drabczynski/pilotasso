@@ -250,7 +250,7 @@ function OfficeScene() {
         </Rise>
         <Rise at={24}>
           <p className="mt-5 text-[76px] font-semibold leading-[1.04] tracking-display text-white">
-            Tout ce qu’il faut savoir pour piloter. Au même endroit.
+            Tout ce qu’il faut savoir pour piloter. <span className="text-lime-300">Au même endroit.</span>
           </p>
         </Rise>
         <div className="mt-12 flex flex-col gap-7 border-l border-white/25 pl-9">
@@ -307,7 +307,7 @@ function EndScene() {
         <p className="mt-8 text-[64px] font-semibold leading-[1.08] tracking-display text-white">
           Moins de fichiers.
           <br />
-          <span className="text-white/60">Plus de mission.</span>
+          Plus de temps pour <span className="text-lime-300">votre{'\u00a0'}mission.</span>
         </p>
       </Rise>
       <div style={{ transform: `scale(${0.85 + cta * 0.15})`, opacity: cta }}>

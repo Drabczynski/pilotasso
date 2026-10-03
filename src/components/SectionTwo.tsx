@@ -21,7 +21,9 @@ export default function SectionTwo() {
         <Eyebrow>Vision à 360°</Eyebrow>
       </Reveal>
       <Reveal from="left" delay={120} className="mt-5">
-        <Heading>Tout ce qu'il faut savoir pour piloter. Au même endroit.</Heading>
+        <Heading>
+          Tout ce qu'il faut savoir pour piloter. <span className="text-lime-300">Au même endroit.</span>
+        </Heading>
       </Reveal>
       <Reveal from="left" delay={240} className="mt-6">
         <Lead>
