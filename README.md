@@ -1,7 +1,7 @@
 # PilotAsso — site vitrine
 
 Landing page PilotAsso : React + TypeScript + Vite + Tailwind CSS + lucide-react.
-Fond vidéo plein écran piloté par le scroll, typographie Inter, panneaux en verre dépoli.
+Fond vidéo plein écran piloté par le scroll, typographie Inter (auto-hébergée, interlettrage négatif), panneaux en verre dépoli.
 
 ```bash
 npm install

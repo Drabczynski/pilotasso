@@ -1,13 +1,12 @@
 import { Check, Minus } from 'lucide-react';
-import Badge from './Badge';
 import Reveal from './Reveal';
-import Section from './Section';
+import Section, { Eyebrow, Heading, Lead } from './Section';
 
 const before = [
   'Multiplication des fichiers Excel',
   'Informations dispersées',
   'Consolidation manuelle',
-  'Ressaisies',
+  'Ressaisies à chaque bilan',
   'Manque de visibilité',
 ];
 
@@ -22,51 +21,50 @@ const after = [
 export default function SectionThree() {
   return (
     <Section id="federations">
-      <div className="flex flex-col gap-8 sm:flex-row sm:justify-between">
-        <Reveal delay={120}>
-          <Badge>Positionnement</Badge>
+      <div className="mx-auto max-w-3xl text-center">
+        <Reveal>
+          <Eyebrow>Positionnement</Eyebrow>
         </Reveal>
-        <Reveal delay={220} className="max-w-sm sm:text-right">
-          <p className="text-lg leading-relaxed text-white drop-shadow-md sm:text-xl">
-            PilotAsso ne vous demande pas de tout remplacer. La plateforme se branche progressivement sur ce
-            que vous utilisez déjà.
-          </p>
+        <Reveal delay={120} className="mt-5">
+          <Heading>
+            Vos outils peuvent rester.
+            <br />
+            <span className="text-white/75">Votre pilotage se centralise.</span>
+          </Heading>
+        </Reveal>
+        <Reveal delay={240} className="mt-6">
+          <Lead>
+            PilotAsso ne vous demande pas de tout remplacer. La plateforme se connecte progressivement à ce que vous
+            utilisez déjà, pour vous donner un point central où retrouver l'essentiel — à votre rythme.
+          </Lead>
         </Reveal>
       </div>
 
-      <div className="flex flex-1 flex-col justify-end gap-12 pt-12 md:flex-row md:items-end md:justify-between md:gap-16">
-        <Reveal as="h2" delay={180} className="max-w-xl">
-          <span className="block text-5xl font-normal leading-[1.05] tracking-tight text-white drop-shadow-lg sm:text-6xl lg:text-7xl">
-            Vos outils restent.
-            <br />
-            Le pilotage se centralise.
-          </span>
+      <div className="mx-auto mt-16 grid max-w-4xl overflow-hidden rounded-3xl border border-white/15 backdrop-blur-xl sm:grid-cols-2">
+        <Reveal from="left" delay={200} className="bg-white/[0.06] p-7 sm:p-9">
+          <p className="font-mono text-xs uppercase tracking-[0.15em] text-white/50">Avant PilotAsso</p>
+          <ul className="mt-6 flex flex-col gap-4">
+            {before.map((item) => (
+              <li key={item} className="flex items-start gap-3 text-base text-white/55">
+                <Minus size={18} className="mt-0.5 shrink-0 text-white/30" />
+                {item}
+              </li>
+            ))}
+          </ul>
         </Reveal>
-
-        <div className="grid w-full max-w-xl grid-cols-1 overflow-hidden rounded-2xl border border-white/15 bg-white/10 backdrop-blur-md sm:grid-cols-2">
-          <Reveal delay={300} className="border-b border-white/15 p-5 sm:border-b-0 sm:border-r sm:p-6">
-            <p className="mb-4 font-mono text-[11px] uppercase tracking-[0.15em] text-white/55">Avant</p>
-            <ul className="flex flex-col gap-3">
-              {before.map((item) => (
-                <li key={item} className="flex items-start gap-2.5 text-sm text-white/60">
-                  <Minus size={16} className="mt-0.5 shrink-0 text-white/35" />
-                  {item}
-                </li>
-              ))}
-            </ul>
-          </Reveal>
-          <Reveal delay={410} className="bg-white/10 p-5 sm:p-6">
-            <p className="mb-4 font-mono text-[11px] uppercase tracking-[0.15em] text-white">Avec PilotAsso</p>
-            <ul className="flex flex-col gap-3">
-              {after.map((item) => (
-                <li key={item} className="flex items-start gap-2.5 text-sm text-white">
-                  <Check size={16} className="mt-0.5 shrink-0 text-white" />
-                  {item}
-                </li>
-              ))}
-            </ul>
-          </Reveal>
-        </div>
+        <Reveal from="right" delay={340} className="bg-white/15 p-7 sm:p-9">
+          <p className="font-mono text-xs uppercase tracking-[0.15em] text-emerald-200">Avec PilotAsso</p>
+          <ul className="mt-6 flex flex-col gap-4">
+            {after.map((item) => (
+              <li key={item} className="flex items-start gap-3 text-base font-medium text-white">
+                <span className="mt-0.5 flex h-[18px] w-[18px] shrink-0 items-center justify-center rounded-full bg-emerald-300">
+                  <Check size={12} strokeWidth={3} className="text-[#0a0a0a]" />
+                </span>
+                {item}
+              </li>
+            ))}
+          </ul>
+        </Reveal>
       </div>
     </Section>
   );

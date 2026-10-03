@@ -89,6 +89,7 @@ async function extractFrames(src: string, signal: { cancelled: boolean }) {
 export default function ScrollVideo() {
   const videoRef = useRef<HTMLVideoElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const sharpRef = useRef<HTMLVideoElement>(null);
   const framesRef = useRef<ImageBitmap[] | null>(null);
   const [src, setSrc] = useState<string | null>(null);
   const [hasFrame, setHasFrame] = useState(false);
@@ -163,6 +164,36 @@ export default function ScrollVideo() {
     let lastDrawn = -1;
     let raf = 0;
 
+    // The frame cache is downscaled, so once scrolling settles we swap in the
+    // full-resolution video seeked to the exact same time.
+    let stillSince: number | null = null;
+    let sharpTime = -1;
+    let sharpShown = false;
+    const hideSharp = () => {
+      const sharp = sharpRef.current;
+      sharpTime = -1;
+      if (!sharp || !sharpShown) return;
+      sharp.style.transition = 'none';
+      sharp.style.opacity = '0';
+      sharpShown = false;
+    };
+    const showSharp = (time: number) => {
+      const sharp = sharpRef.current;
+      if (!sharp || sharp.readyState < 1 || Math.abs(sharpTime - time) < 0.02) return;
+      sharpTime = time;
+      const reveal = () => {
+        if (sharpTime !== time) return;
+        sharp.style.transition = 'opacity 250ms ease-out';
+        sharp.style.opacity = '1';
+        sharpShown = true;
+      };
+      if (Math.abs(sharp.currentTime - time) < 0.001 && !sharp.seeking) reveal();
+      else {
+        sharp.addEventListener('seeked', reveal, { once: true });
+        sharp.currentTime = time;
+      }
+    };
+
     const resize = () => {
       const dpr = Math.min(window.devicePixelRatio || 1, 2);
       canvas.width = Math.round(window.innerWidth * dpr);
@@ -197,6 +228,16 @@ export default function ScrollVideo() {
             ctx.globalAlpha = 1;
           }
           lastDrawn = smoothed;
+        }
+
+        const sharp = sharpRef.current;
+        if (Math.abs(progress() - smoothed) > 0.001) {
+          stillSince = null;
+          hideSharp();
+        } else if (sharp && Number.isFinite(sharp.duration)) {
+          const now = performance.now();
+          stillSince ??= now;
+          if (now - stillSince > 120) showSharp(smoothed * (sharp.duration - 0.05));
         }
       } else if (video && video.readyState >= 1 && Number.isFinite(video.duration)) {
         const target = smoothed * (video.duration - 0.05);
@@ -243,6 +284,16 @@ export default function ScrollVideo() {
           framesReady ? 'opacity-100' : 'opacity-0'
         }`}
       />
+      {src && framesReady && (
+        <video
+          ref={sharpRef}
+          className="absolute inset-0 h-full w-full object-cover opacity-0"
+          src={src}
+          muted
+          playsInline
+          preload="auto"
+        />
+      )}
       {/* Transparent scrim: keeps white type legible over the bright office shots */}
       <div
         className="absolute inset-0"

@@ -1,93 +1,67 @@
-import { ChevronRight } from 'lucide-react';
-import Badge from './Badge';
+import { Banknote, Check, Search, Zap, type LucideIcon } from 'lucide-react';
 import Reveal from './Reveal';
-import Section from './Section';
+import Section, { Eyebrow, Heading, Lead } from './Section';
 
-const capabilities = [
+const pillars: { icon: LucideIcon; title: string; body: string; points: string[] }[] = [
   {
+    icon: Banknote,
     title: 'Finances',
-    body: 'Budget et réalisé comparés en continu, projections de trésorerie, écarts visibles avant qu’ils ne bloquent.',
+    body: 'Budget, réel, écarts et trésorerie au même endroit, avec des projections qui vous laissent décider avant de subir.',
+    points: ['Budget et réalisé comparés en continu', 'Projections de trésorerie', 'Écarts visibles avant qu’ils ne bloquent'],
   },
   {
+    icon: Search,
     title: 'Financements',
-    body: 'Les opportunités adaptées à votre association repérées plus tôt, échéances et financeurs suivis au même endroit.',
+    body: 'Les opportunités pertinentes pour votre association repérées plus tôt, et toutes vos échéances suivies au même endroit.',
+    points: ['Opportunités identifiées plus tôt', 'Échéances centralisées', 'Suivi unifié de vos financeurs'],
   },
   {
+    icon: Zap,
     title: 'Automatisation',
-    body: 'Moins de saisie et de ressaisie : le temps passé à rassembler l’information revient à la décision.',
+    body: 'Moins de saisie, moins de ressaisie : le temps passé à rassembler l’information revient à votre mission.',
+    points: ['Moins de saisie manuelle', 'Aide intelligente à la recherche', 'Préparation des bilans plus rapide'],
   },
 ];
 
 export default function SectionTwo() {
   return (
     <Section id="solutions">
-      <div className="flex flex-col gap-8 sm:flex-row sm:justify-between">
-        <Reveal delay={120}>
-          <Badge>Vision à 360°</Badge>
+      <div className="mx-auto max-w-3xl text-center">
+        <Reveal>
+          <Eyebrow>Vision à 360°</Eyebrow>
         </Reveal>
-        <Reveal delay={220} className="max-w-sm sm:text-right">
-          <p className="text-lg leading-relaxed text-white drop-shadow-md sm:text-xl">
-            Finances, financements, activité, gouvernance — tout ce qu'il faut savoir pour piloter, sans
-            naviguer entre dix outils.
-          </p>
+        <Reveal delay={120} className="mt-5">
+          <Heading>Tout ce qu'il faut savoir pour piloter. Au même endroit.</Heading>
+        </Reveal>
+        <Reveal delay={240} className="mt-6">
+          <Lead>
+            Combien de fichiers devez-vous ouvrir pour savoir où en est votre association ? Finances, financements,
+            activité et gouvernance : PilotAsso rassemble l'essentiel pour que chaque décision parte d'une information
+            à jour, sans naviguer entre dix outils.
+          </Lead>
         </Reveal>
       </div>
 
-      <div className="flex flex-1 flex-col justify-end gap-12 pt-12 md:flex-row md:items-end md:justify-between md:gap-16">
-        <div className="max-w-xl">
-          <Reveal as="h2" delay={180}>
-            <span className="block text-5xl font-normal leading-[1.05] tracking-tight text-white drop-shadow-lg sm:text-6xl lg:text-7xl">
-              Anticiper
-              <br />
-              plutôt que subir.
-            </span>
-          </Reveal>
-          <Reveal delay={320}>
-            <p className="mt-6 max-w-md text-sm text-white/80 drop-shadow-md sm:text-base">
-              Budget, réel, écarts et trésorerie au même endroit, avec des projections qui vous laissent
-              prendre les décisions avant de les découvrir trop tard.
-            </p>
-          </Reveal>
-          <Reveal delay={420} className="mt-8 flex flex-wrap gap-3">
-            <a
-              href="#demo"
-              className="inline-flex items-center gap-1 rounded-full bg-white px-5 py-2.5 text-xs font-medium text-black transition-colors duration-300 hover:bg-white/85 sm:text-sm"
-            >
-              Réserver ma démo gratuite
-              <ChevronRight size={14} />
-            </a>
-            <a
-              href="#abonnement"
-              className="rounded-full border border-white/25 bg-white/10 px-5 py-2.5 text-xs text-white backdrop-blur-md transition-colors duration-300 hover:bg-white/20 sm:text-sm"
-            >
-              S'abonner
-            </a>
-          </Reveal>
-        </div>
-
-        <div className="w-full max-w-md rounded-2xl border border-white/15 bg-white/10 px-5 backdrop-blur-md sm:px-6">
-          {capabilities.map((item, i) => (
-            <Reveal
-              key={item.title}
-              delay={300 + i * 110}
-              className={`group flex gap-5 py-5 ${i < capabilities.length - 1 ? 'border-b border-white/15' : ''}`}
-            >
-              <span className="pt-1 font-mono text-[11px] tracking-[0.15em] text-white/55">
-                {String(i + 1).padStart(2, '0')}
+      <div className="mt-16 grid gap-4 md:grid-cols-3">
+        {pillars.map(({ icon: Icon, title, body, points }, i) => (
+          <Reveal key={title} delay={200 + i * 140} from="scale">
+            <div className="h-full rounded-2xl border border-white/15 bg-white/10 p-6 backdrop-blur-xl transition-colors duration-300 hover:bg-white/15 sm:p-7">
+              <span className="flex h-10 w-10 items-center justify-center rounded-xl border border-white/20 bg-white/10">
+                <Icon size={18} className="text-white" />
               </span>
-              <div>
-                <h3 className="flex items-center gap-1 text-base font-medium text-white sm:text-lg">
-                  {item.title}
-                  <ChevronRight
-                    size={16}
-                    className="text-white/40 transition-all duration-300 group-hover:translate-x-0.5 group-hover:text-white"
-                  />
-                </h3>
-                <p className="mt-1.5 text-sm leading-relaxed text-white/70">{item.body}</p>
-              </div>
-            </Reveal>
-          ))}
-        </div>
+              <h3 className="mt-5 text-xl font-semibold tracking-heading text-white sm:text-2xl">{title}</h3>
+              <p className="mt-3 text-[15px] leading-relaxed text-white/75">{body}</p>
+              <ul className="mt-5 flex flex-col gap-2.5 border-t border-white/10 pt-5">
+                {points.map((point) => (
+                  <li key={point} className="flex items-start gap-2.5 text-sm text-white/85">
+                    <Check size={15} className="mt-0.5 shrink-0 text-emerald-300" />
+                    {point}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </Reveal>
+        ))}
       </div>
     </Section>
   );

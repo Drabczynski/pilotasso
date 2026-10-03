@@ -12,7 +12,7 @@ const links = [
 export default function Navbar() {
   return (
     <header className="fixed inset-x-0 top-0 z-50 border-b border-white/15 bg-white/5 backdrop-blur-md">
-      <nav className="flex items-center justify-between px-5 py-4 sm:px-8 md:px-12">
+      <nav className="mx-auto flex max-w-7xl items-center justify-between px-5 py-4 sm:px-8 md:px-12">
         <Reveal>
           <Logo />
         </Reveal>

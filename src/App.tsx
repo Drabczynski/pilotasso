@@ -14,11 +14,12 @@ export default function App() {
         <Navbar />
         <main>
           <SectionOne />
-          <div className="h-[80vh]" aria-hidden />
+          {/* Breathing room so the scroll video has distance to play between sections */}
+          <div className="h-[40vh]" aria-hidden />
           <SectionTwo />
-          <div className="h-[50vh]" aria-hidden />
+          <div className="h-[30vh]" aria-hidden />
           <SectionThree />
-          <div className="h-[50vh]" aria-hidden />
+          <div className="h-[30vh]" aria-hidden />
           <SectionFour />
         </main>
         <Footer />
