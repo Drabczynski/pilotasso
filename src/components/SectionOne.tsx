@@ -25,11 +25,15 @@ export default function SectionOne() {
           </span>
         </Reveal>
 
-        <Reveal delay={360} className="mt-6 max-w-2xl">
+        <Reveal delay={360} className="mt-6 max-w-2xl md:max-w-none">
           <p className="text-base leading-relaxed tracking-snug text-white/80 drop-shadow-md sm:text-lg">
-            Un budget dans un tableur, la trésorerie dans un autre, les subventions dans un dossier partagé…
-            PilotAsso réunit vos finances, vos projets et vos financements en un seul endroit, repère les
-            opportunités faites pour vous, et garde les outils qui fonctionnent déjà.
+            Un budget dans un tableur, la trésorerie dans un autre, les subventions{' '}
+            <br className="hidden md:block" />
+            dans un dossier partagé… PilotAsso réunit vos finances, vos projets et vos financements{' '}
+            <br className="hidden md:block" />
+            en un seul endroit, repère les opportunités faites pour vous, et garde les outils{' '}
+            <br className="hidden md:block" />
+            qui fonctionnent déjà.
           </p>
         </Reveal>
 

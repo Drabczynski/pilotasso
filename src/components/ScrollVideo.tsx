@@ -8,6 +8,30 @@ const MIN_FRAMES = 24;
 const FRAMES_PER_SECOND = 24;
 const LERP = 0.12;
 
+/**
+ * Lime ribbons (brand flourish) that sweep across the video and vanish.
+ * `window` is the slice of video progress during which each one passes.
+ * Paths live in a 1600 × 900 box stretched over the viewport.
+ */
+const RIBBONS = [
+  {
+    // between the dashboard and the "Vision à 360°" message (scan → real office)
+    window: [0.4, 0.56] as const,
+    d: 'M-80 330 C 220 210, 470 420, 760 330 S 1250 190, 1680 290',
+  },
+  {
+    // just before the closing message, sweeping the other way
+    window: [0.72, 0.9] as const,
+    d: 'M1680 610 C 1380 720, 1120 520, 840 600 S 330 760, -80 640',
+  },
+];
+const RIBBON_SEGMENT = 0.6; // visible share of the path while it travels
+
+function smoothstep(x: number) {
+  const t = Math.min(1, Math.max(0, x));
+  return t * t * (3 - 2 * t);
+}
+
 function isSmallScreen() {
   return window.innerWidth < 768;
 }
@@ -91,6 +115,7 @@ export default function ScrollVideo() {
   const videoRef = useRef<HTMLVideoElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const sharpRef = useRef<HTMLVideoElement>(null);
+  const ribbonRefs = useRef<(SVGPathElement | null)[]>([]);
   const framesRef = useRef<ImageBitmap[] | null>(null);
   const [src, setSrc] = useState<string | null>(null);
   const [hasFrame, setHasFrame] = useState(false);
@@ -218,6 +243,17 @@ export default function ScrollVideo() {
 
     const tick = () => {
       smoothed += (progress() - smoothed) * LERP;
+
+      // Ribbons: the visible segment travels from before the path start to past its end.
+      RIBBONS.forEach((ribbon, i) => {
+        const path = ribbonRefs.current[i];
+        if (!path) return;
+        const [a, b] = ribbon.window;
+        const t = smoothstep((smoothed - a) / (b - a));
+        path.style.strokeDashoffset = String(RIBBON_SEGMENT - t * (1 + RIBBON_SEGMENT));
+        path.style.transform = `translateY(${(t - 0.5) * 60}px)`;
+      });
+
       const frames = framesRef.current;
       const video = videoRef.current;
 
@@ -309,6 +345,30 @@ export default function ScrollVideo() {
             'linear-gradient(to bottom, rgba(10,10,10,0.55) 0%, rgba(10,10,10,0.25) 35%, rgba(10,10,10,0.3) 60%, rgba(10,10,10,0.7) 100%)',
         }}
       />
+      <svg
+        viewBox="0 0 1600 900"
+        preserveAspectRatio="none"
+        className="absolute inset-0 h-full w-full"
+        style={{ filter: 'drop-shadow(0 0 18px rgba(212,245,74,0.35))' }}
+      >
+        {RIBBONS.map((ribbon, i) => (
+          <path
+            key={ribbon.d}
+            ref={(el) => {
+              ribbonRefs.current[i] = el;
+            }}
+            d={ribbon.d}
+            fill="none"
+            stroke="#d4f54a"
+            className="[stroke-width:9px] md:[stroke-width:14px]"
+            strokeLinecap="round"
+            vectorEffect="non-scaling-stroke"
+            pathLength={1}
+            strokeDasharray={`${RIBBON_SEGMENT} 3`}
+            strokeDashoffset={RIBBON_SEGMENT}
+          />
+        ))}
+      </svg>
     </div>
   );
 }
