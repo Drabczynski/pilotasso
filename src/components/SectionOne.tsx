@@ -4,7 +4,7 @@ import Reveal from './Reveal';
 
 export default function SectionOne() {
   return (
-    <section id="top" className="px-5 pb-24 pt-36 sm:px-8 sm:pt-44 md:px-12">
+    <section id="top" className="px-5 pb-16 pt-36 sm:px-8 sm:pt-44 md:px-12">
       <div className="mx-auto flex max-w-6xl flex-col items-center text-center">
         <Reveal delay={100}>
           <a
@@ -20,7 +20,8 @@ export default function SectionOne() {
         <Reveal as="h1" delay={220} className="mt-8 max-w-4xl">
           <span className="block text-4xl font-semibold leading-[1.02] tracking-display text-white drop-shadow-lg sm:text-5xl md:text-6xl lg:text-[4rem]">
             Pilotez votre association,
-            <span className="text-white/60"> pas vos fichiers Excel.</span>
+            <br />
+            <span className="text-white/60">pas vos fichiers Excel.</span>
           </span>
         </Reveal>
 
@@ -48,9 +49,6 @@ export default function SectionOne() {
           </a>
         </Reveal>
 
-        <Reveal delay={560}>
-          <p className="mt-5 text-sm text-white/60">30 minutes, sans engagement · Construit avec et pour les associations</p>
-        </Reveal>
 
         <DashboardMock />
       </div>

@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 
 export const HERO_VIDEO_URL = '/video/hero.mp4';
 const HERO_POSTER_URL = '/video/hero-poster.jpg';
+export const VIDEO_END_ID = 'apres-video';
 
 const MIN_FRAMES = 24;
 const FRAMES_PER_SECOND = 24;
@@ -13,7 +14,7 @@ function isSmallScreen() {
 
 /** Fewer, smaller frames on phones to keep memory in check. */
 function frameBudget() {
-  return isSmallScreen() ? { maxFrames: 90, maxWidth: 640 } : { maxFrames: 120, maxWidth: 854 };
+  return isSmallScreen() ? { maxFrames: 90, maxWidth: 640 } : { maxFrames: 120, maxWidth: 960 };
 }
 
 function drawCover(ctx: CanvasRenderingContext2D, source: ImageBitmap, cw: number, ch: number) {
@@ -155,8 +156,14 @@ export default function ScrollVideo() {
     if (!ctx) return;
 
     let maxScroll = 1;
+    // The video plays out over the dark zone only: it reaches its last frame
+    // just as the white page (#apres-video) starts sliding over it.
     const measure = () => {
-      maxScroll = Math.max(1, document.documentElement.scrollHeight - window.innerHeight);
+      const end = document.getElementById(VIDEO_END_ID);
+      const endTop = end
+        ? end.getBoundingClientRect().top + window.scrollY
+        : document.documentElement.scrollHeight;
+      maxScroll = Math.max(1, endTop - window.innerHeight);
     };
     const progress = () => Math.min(1, Math.max(0, window.scrollY / maxScroll));
 

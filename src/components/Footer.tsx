@@ -23,7 +23,7 @@ export default function Footer() {
   };
 
   return (
-    <footer className="border-t border-white/15 bg-white/5 pt-12 backdrop-blur-md">
+    <footer className="bg-ink pt-14 text-white">
       <div className="mx-auto max-w-7xl px-5 sm:px-8 md:px-12">
         <div className="grid gap-10 pb-12 md:grid-cols-[1.4fr_1fr_1fr_1.4fr]">
           <div className="flex flex-col gap-4">

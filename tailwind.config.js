@@ -3,6 +3,10 @@ export default {
   content: ['./index.html', './src/**/*.{ts,tsx}'],
   theme: {
     extend: {
+      colors: {
+        ink: '#0b1b33',
+        paper: '#f6f7f4',
+      },
       letterSpacing: {
         display: '-0.045em',
         heading: '-0.035em',

@@ -1,9 +1,13 @@
+import BetaDemo from './components/BetaDemo';
+import ClosingMessage from './components/ClosingMessage';
+import DarkZone from './components/DarkZone';
 import Footer from './components/Footer';
 import Navbar from './components/Navbar';
-import ScrollVideo from './components/ScrollVideo';
-import SectionFour from './components/SectionFour';
+import Pillars from './components/Pillars';
+import Positioning from './components/Positioning';
+import Problem from './components/Problem';
+import ScrollVideo, { VIDEO_END_ID } from './components/ScrollVideo';
 import SectionOne from './components/SectionOne';
-import SectionThree from './components/SectionThree';
 import SectionTwo from './components/SectionTwo';
 
 export default function App() {
@@ -13,14 +17,23 @@ export default function App() {
       <div className="relative z-10">
         <Navbar />
         <main>
-          <SectionOne />
-          {/* Breathing room so the scroll video has distance to play between sections */}
-          <div className="h-[40vh]" aria-hidden />
-          <SectionTwo />
-          <div className="h-[30vh]" aria-hidden />
-          <SectionThree />
-          <div className="h-[30vh]" aria-hidden />
-          <SectionFour />
+          {/* Dark zone over the scroll video: few messages, timed to the footage */}
+          <DarkZone hero={<SectionOne />} messages={[<SectionTwo />, <ClosingMessage />]} />
+
+          {/* White page sliding over the end of the video */}
+          <div
+            id={VIDEO_END_ID}
+            className="relative rounded-t-[2rem] bg-paper text-ink shadow-[0_-40px_80px_-20px_rgba(0,0,0,0.6)] sm:rounded-t-[3rem]"
+            style={{
+              backgroundImage: 'radial-gradient(rgba(11,27,51,0.07) 1px, transparent 1px)',
+              backgroundSize: '22px 22px',
+            }}
+          >
+            <Problem />
+            <Pillars />
+            <Positioning />
+            <BetaDemo />
+          </div>
         </main>
         <Footer />
       </div>
