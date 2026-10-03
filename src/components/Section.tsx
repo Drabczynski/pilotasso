@@ -21,7 +21,7 @@ export function Eyebrow({ children, tone = 'dark' }: { children: ReactNode; tone
   return (
     <p
       className={`font-mono text-xs font-medium uppercase tracking-[0.15em] ${
-        tone === 'dark' ? 'text-white/70 drop-shadow-md' : 'text-ink/50'
+        tone === 'dark' ? 'text-white/85 drop-shadow-md' : 'text-ink/50'
       }`}
     >
       {children}
@@ -53,7 +53,7 @@ export function Lead({ children, className = '', tone = 'dark' }: { children: Re
   return (
     <p
       className={`text-base leading-relaxed tracking-snug sm:text-lg ${
-        tone === 'dark' ? 'text-white/80 drop-shadow-md' : 'text-ink/65'
+        tone === 'dark' ? 'text-white/90 drop-shadow-md' : 'text-ink/65'
       } ${className}`}
     >
       {children}

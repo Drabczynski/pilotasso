@@ -11,7 +11,7 @@ const demoPoints: { icon: LucideIcon; title: string; body: string }[] = [
 export default function BetaDemo() {
   return (
     <>
-      <Section id="beta" className="!py-12 sm:!py-16">
+      <Section id="beta" className="!pb-12 !pt-24 sm:!pb-16 sm:!pt-32">
         <Reveal from="scale">
           <div className="grid items-center gap-8 rounded-[2rem] bg-lime-300 p-8 sm:p-12 md:grid-cols-[auto_1fr_auto]">
             <p className="text-7xl font-semibold leading-none tracking-display text-ink sm:text-8xl">14</p>

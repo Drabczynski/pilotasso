@@ -9,6 +9,7 @@ import Problem from './components/Problem';
 import ScrollVideo, { VIDEO_END_ID } from './components/ScrollVideo';
 import SectionOne from './components/SectionOne';
 import SectionTwo from './components/SectionTwo';
+import Testimonial from './components/Testimonial';
 
 export default function App() {
   return (
@@ -32,6 +33,7 @@ export default function App() {
             <Problem />
             <Pillars />
             <Positioning />
+            <Testimonial />
             <BetaDemo />
           </div>
         </main>

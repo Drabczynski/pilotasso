@@ -4,7 +4,11 @@ import { Eyebrow, Lead } from './Section';
 /** Last line over the video, just before the white page takes over. */
 export default function ClosingMessage() {
   return (
-    <div className="ml-auto max-w-md text-right">
+    <div className="relative isolate ml-auto max-w-md text-right text-legible">
+      <div
+        aria-hidden
+        className="pointer-events-none absolute -inset-x-40 -inset-y-28 -z-10 bg-[radial-gradient(closest-side,rgba(4,8,16,0.7)_0%,rgba(4,8,16,0.5)_45%,transparent_100%)]"
+      />
       <Reveal from="right">
         <Eyebrow>Construit avec le terrain</Eyebrow>
       </Reveal>
