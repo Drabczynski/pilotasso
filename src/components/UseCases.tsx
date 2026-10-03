@@ -16,7 +16,7 @@ interface UseCase {
   orientation: 'portrait' | 'landscape';
   title: string;
   eyebrow: string;
-  photo: string; // Unsplash photo id (Unsplash License)
+  photo: string; // path under /public
   alt: string;
   body: string;
   points: string[];
@@ -28,8 +28,8 @@ const CASES: UseCase[] = [
     orientation: 'portrait',
     eyebrow: 'Gouvernance',
     title: 'Préparer le conseil d’administration en une heure',
-    photo: 'photo-1573164574572-cb89e39749b4',
-    alt: 'Une équipe réunie autour d’une table avec des ordinateurs',
+    photo: '/images/cas/echange.jpg',
+    alt: 'Un bénévole échange avec une responsable associative autour d’une table',
     body: 'Les chiffres clés, l’avancement des projets et les décisions à prendre sont déjà rassemblés. Vous arrivez au CA avec une vision claire, sans passer trois soirées à consolider des tableurs.',
     points: ['Synthèse budgétaire prête à présenter', 'Suivi des décisions et des votes', 'Historique des CA et AG au même endroit'],
   },
@@ -38,47 +38,44 @@ const CASES: UseCase[] = [
     orientation: 'landscape',
     eyebrow: 'Finances',
     title: 'Suivre budget et trésorerie en temps réel',
-    photo: 'photo-1517048676732-d65bc937f952',
-    alt: 'Une réunion de travail autour de documents',
+    photo: '/promo/office-140.jpg',
+    alt: 'Une équipe au travail dans les locaux de l’association',
     body: 'Budget voté, réalisé et écarts se mettent à jour au fil des transactions. Les projections de trésorerie vous montrent les mois tendus avant qu’ils n’arrivent.',
     points: ['Budget et réalisé comparés en continu', 'Projection de trésorerie sur 12 mois', 'Alertes quand un poste dérive'],
   },
   {
     id: 2,
     orientation: 'portrait',
-    eyebrow: 'Financements',
-    title: 'Ne plus rater un appel à projets',
-    photo: 'photo-1599059813005-11265ba4b4ce',
-    alt: 'Des bénévoles trient des dons',
-    body: 'PilotAsso repère les subventions et appels à projets adaptés à votre association et centralise toutes les échéances : dépôt, justificatifs, bilans.',
-    points: ['Opportunités filtrées selon votre activité', 'Calendrier unique des échéances', 'Suivi de chaque financeur'],
+    eyebrow: 'Projets',
+    title: 'Garder le fil de chaque projet',
+    photo: '/images/cas/atelier.jpg',
+    alt: 'Trois personnes préparent un projet autour d’un grand plan',
+    body: 'Chaque projet a son budget, ses financements et son activité. Vous savez où il en est, ce qu’il a coûté et ce qu’il reste à financer.',
+    points: ['Budget et financements par projet', 'Avancement partagé avec l’équipe', 'Bilans de projet générés pour les financeurs'],
   },
   {
     id: 3,
     orientation: 'landscape',
-    eyebrow: 'Projets',
-    title: 'Garder le fil de chaque projet',
-    photo: 'photo-1542744173-8e7e53415bb0',
-    alt: 'Une personne présente un projet à son équipe',
-    body: 'Chaque projet a son budget, ses financements et son activité. Vous savez où il en est, ce qu’il a coûté et ce qu’il reste à financer.',
-    points: ['Budget et financements par projet', 'Avancement partagé avec l’équipe', 'Bilans de projet générés pour les financeurs'],
+    eyebrow: 'Financements',
+    title: 'Ne plus rater un appel à projets',
+    photo: '/promo/office-168.jpg',
+    alt: 'Deux bénévoles consultent un ordinateur ensemble',
+    body: 'PilotAsso repère les subventions et appels à projets adaptés à votre association et centralise toutes les échéances : dépôt, justificatifs, bilans.',
+    points: ['Opportunités filtrées selon votre activité', 'Calendrier unique des échéances', 'Suivi de chaque financeur'],
   },
   {
     id: 4,
     orientation: 'portrait',
     eyebrow: 'Automatisation',
     title: 'Classer les dépenses sans y passer la soirée',
-    photo: 'photo-1787647561633-dcbbad61f227',
-    alt: 'Une bénévole souriante travaille sur son ordinateur',
+    photo: '/images/cas/ordinateur.jpg',
+    alt: 'Deux femmes travaillent ensemble sur un ordinateur portable',
     body: 'Les transactions bancaires arrivent toutes seules et sont classées automatiquement par poste et par projet. Il ne reste qu’à valider.',
     points: ['Synchronisation bancaire', 'Catégorisation automatique', 'Moins de saisie, moins d’erreurs'],
   },
 ];
 
-const photoUrl = (c: UseCase, w: number) =>
-  `https://images.unsplash.com/${c.photo}?auto=format&fit=crop&w=${w}&h=${Math.round(
-    c.orientation === 'portrait' ? w * 1.25 : w * 0.625,
-  )}&q=80`;
+const photoUrl = (c: UseCase, _w?: number) => c.photo;
 
 interface Slot {
   x: number;
@@ -148,7 +145,7 @@ function DetailModal({ item, onClose }: { item: UseCase; onClose: () => void }) 
         transition={{ type: 'spring', stiffness: 320, damping: 30 }}
       >
         <div className="relative h-56 overflow-hidden sm:h-64">
-          <img src={photoUrl({ ...item, orientation: 'landscape' }, 1200)} alt={item.alt} className="h-full w-full object-cover" />
+          <img src={photoUrl({ ...item, orientation: 'landscape' }, 1200)} alt={item.alt} className="h-full w-full object-cover object-[center_30%]" />
           <div className="absolute inset-0 bg-gradient-to-t from-ink/50 to-transparent" />
           <span className="absolute bottom-4 left-6 rounded-full bg-lime-300 px-3 py-1 text-xs font-semibold text-ink">
             {item.eyebrow}
