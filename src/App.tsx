@@ -10,6 +10,7 @@ import ScrollVideo, { VIDEO_END_ID } from './components/ScrollVideo';
 import SectionOne from './components/SectionOne';
 import SectionTwo from './components/SectionTwo';
 import Testimonial from './components/Testimonial';
+import UseCases from './components/UseCases';
 
 export default function App() {
   return (
@@ -33,6 +34,7 @@ export default function App() {
             <Problem />
             <Pillars />
             <Positioning />
+            <UseCases />
             <Testimonial />
             <BetaDemo />
           </div>

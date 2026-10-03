@@ -25,16 +25,16 @@ export const PROMO_FPS = 24;
 const FADE = 12;
 const CUT = 5; // near-cut between the brand "posters"
 const SCENES: Record<string, { from: number; len: number; fade?: number }> = {
-  files: { from: 0, len: 96 },
-  lidar: { from: 84, len: 106 },
-  dashboard: { from: 178, len: 156 },
-  office: { from: 322, len: 132 },
-  poster1: { from: 449, len: 64, fade: CUT },
-  poster2: { from: 508, len: 64, fade: CUT },
-  poster3: { from: 567, len: 64, fade: CUT },
-  poster4: { from: 626, len: 64, fade: CUT },
-  beta: { from: 685, len: 72, fade: CUT },
-  end: { from: 752, len: 120, fade: CUT },
+  files: { from: 0, len: 108 },
+  lidar: { from: 96, len: 130 },
+  dashboard: { from: 214, len: 168 },
+  office: { from: 370, len: 156 },
+  poster1: { from: 521, len: 100, fade: CUT },
+  poster2: { from: 616, len: 100, fade: CUT },
+  poster3: { from: 711, len: 100, fade: CUT },
+  poster4: { from: 806, len: 100, fade: CUT },
+  beta: { from: 901, len: 90, fade: CUT },
+  end: { from: 986, len: 132, fade: CUT },
 };
 export const PROMO_DURATION = SCENES.end.from + SCENES.end.len;
 
@@ -92,7 +92,7 @@ function Logo({ size = 28, color = '#ffffff' }: { size?: number; color?: string 
 }
 
 const scrim =
-  'linear-gradient(to bottom, rgba(10,10,10,0.55) 0%, rgba(10,10,10,0.3) 40%, rgba(10,10,10,0.75) 100%)';
+  'linear-gradient(to bottom, rgba(10,10,10,0.3) 0%, rgba(10,10,10,0.05) 40%, rgba(10,10,10,0.4) 100%)';
 
 /* ---------------------------------------------------------------- scenes */
 
@@ -109,7 +109,7 @@ function FilesScene() {
   const f = useCurrentFrame();
   const { fps } = useVideoConfig();
   // Everything collapses into a single point at the end of the scene.
-  const collapse = interpolate(f, [68, 90], [0, 1], {
+  const collapse = interpolate(f, [78, 100], [0, 1], {
     extrapolateLeft: 'clamp',
     extrapolateRight: 'clamp',
     easing: Easing.in(Easing.cubic),
@@ -163,7 +163,7 @@ function LidarScene() {
       </AbsoluteFill>
       <AbsoluteFill style={{ background: scrim }} />
       <AbsoluteFill
-        style={{ background: 'radial-gradient(45% 35% at 50% 50%, rgba(4,8,16,0.7) 0%, rgba(4,8,16,0.35) 55%, transparent 100%)' }}
+        style={{ background: 'radial-gradient(45% 35% at 50% 50%, rgba(4,8,16,0.42) 0%, rgba(4,8,16,0.18) 55%, transparent 100%)' }}
       />
       <div className="absolute left-[72px] top-[56px]">
         <Rise at={10} distance={16}>
@@ -197,13 +197,13 @@ function DashboardScene() {
   return (
     <AbsoluteFill className="items-center justify-center overflow-hidden bg-[#0a0a0a]">
       {/* LiDAR floor, slowed down and dimmed, as a backdrop */}
-      <AbsoluteFill style={{ opacity: 0.45, filter: 'blur(6px)' }}>
+      <AbsoluteFill style={{ opacity: 0.75, filter: 'blur(6px)' }}>
         <Freeze frame={0}>
           <OffthreadVideo src={VIDEO} muted trimBefore={SCAN_END - 1} className="h-full w-full object-cover" />
         </Freeze>
       </AbsoluteFill>
       <AbsoluteFill
-        style={{ background: 'radial-gradient(60% 55% at 50% 45%, rgba(18,48,90,0.55) 0%, rgba(10,10,10,0.9) 100%)' }}
+        style={{ background: 'radial-gradient(60% 55% at 50% 45%, rgba(18,48,90,0.35) 0%, rgba(10,10,10,0.6) 100%)' }}
       />
       <div className="absolute inset-x-0 top-[64px] text-center">
         <Rise at={50}>
@@ -250,7 +250,7 @@ function OfficeScene() {
       <AbsoluteFill style={{ background: scrim }} />
       <AbsoluteFill
         style={{
-          background: 'radial-gradient(55% 75% at 22% 52%, rgba(4,8,16,0.78) 0%, rgba(4,8,16,0.45) 50%, transparent 85%)',
+          background: 'radial-gradient(55% 75% at 22% 52%, rgba(4,8,16,0.55) 0%, rgba(4,8,16,0.25) 50%, transparent 85%)',
         }}
       />
       <div className="absolute left-[140px] top-1/2 w-[780px] -translate-y-1/2 text-legible">
@@ -315,8 +315,8 @@ const POSTERS: Poster[] = [
     accent: LIME,
     lines: ['Voyez plus clair.', 'Décidez avec confiance.'],
     sub: 'Finances, projets, activité : une vision d’ensemble pour vos décisions.',
-    photo: 'images/temoignage.jpg',
-    focus: '58% 40%',
+    photo: 'promo/office-140.jpg',
+    focus: '48% 55%',
     ribbon: 'M -40 780 C 260 700, 460 860, 700 820 S 980 600, 1100 520 S 1600 380, 1980 420',
   },
   {
@@ -350,7 +350,7 @@ function PosterScene({ poster }: { poster: Poster }) {
     extrapolateRight: 'clamp',
     easing: Easing.inOut(Easing.cubic),
   });
-  const zoom = interpolate(f, [0, 64], [1.12, 1.02]);
+  const zoom = interpolate(f, [0, 100], [1.12, 1.02]);
   return (
     <AbsoluteFill style={{ background: poster.bg }}>
       {/* photo, bottom right, rounded top-left corner like the posters */}
