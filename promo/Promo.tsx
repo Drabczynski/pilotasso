@@ -305,8 +305,8 @@ const POSTERS: Poster[] = [
     accent: '#5b1631',
     lines: ['Vos projets avancent.', 'Gardez le fil.'],
     sub: 'Une vue d’ensemble de vos projets, de vos financements et de votre activité.',
-    photo: 'promo/office-168.jpg',
-    focus: '52% 50%',
+    photo: 'images/cas/atelier.jpg',
+    focus: '50% 45%',
     ribbon: 'M -40 610 C 240 520, 520 560, 600 700 C 660 820, 470 900, 420 790 C 360 650, 760 560, 1010 640 S 1500 760, 1980 470',
   },
   {
@@ -315,8 +315,8 @@ const POSTERS: Poster[] = [
     accent: LIME,
     lines: ['Voyez plus clair.', 'Décidez avec confiance.'],
     sub: 'Finances, projets, activité : une vision d’ensemble pour vos décisions.',
-    photo: 'promo/office-140.jpg',
-    focus: '48% 55%',
+    photo: 'images/cas/echange.jpg',
+    focus: '60% 30%',
     ribbon: 'M -40 780 C 260 700, 460 860, 700 820 S 980 600, 1100 520 S 1600 380, 1980 420',
   },
   {
@@ -325,8 +325,8 @@ const POSTERS: Poster[] = [
     accent: LIME,
     lines: ['Moins de recherches.', 'Plus de temps pour agir.'],
     sub: 'Retrouvez vos finances, vos projets et votre activité au même endroit.',
-    photo: 'promo/office-120.jpg',
-    focus: '30% 50%',
+    photo: 'images/cas/ordinateur.jpg',
+    focus: '50% 40%',
     ribbon: 'M -40 900 C 200 860, 380 700, 520 760 C 640 810, 560 960, 450 900 C 330 830, 640 620, 980 640 S 1600 520, 1980 300',
   },
   {
@@ -335,9 +335,9 @@ const POSTERS: Poster[] = [
     accent: '#0b1f44',
     lines: ['Gardez le cap.', 'Faites avancer vos projets.'],
     sub: 'Projets, financements, activité : les informations utiles, au même endroit.',
-    photo: 'promo/office-168.jpg',
-    focus: '18% 60%',
-    ribbon: 'M -40 520 C 300 600, 420 900, 640 860 S 900 620, 1060 700 S 1500 980, 1980 760',
+    photo: 'images/cas/atelier.jpg',
+    focus: '70% 30%',
+    ribbon: 'M -40 800 C 300 860, 420 1000, 640 960 S 900 760, 1060 820 S 1500 1040, 1980 840',
   },
 ];
 
