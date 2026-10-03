@@ -23,8 +23,8 @@ export default function Footer() {
   };
 
   return (
-    <footer className="border-t border-white/15 bg-white/5 px-5 pt-12 backdrop-blur-md sm:px-8 md:px-12">
-      <div className="mx-auto max-w-7xl">
+    <footer className="border-t border-white/15 bg-white/5 pt-12 backdrop-blur-md">
+      <div className="mx-auto max-w-7xl px-5 sm:px-8 md:px-12">
         <div className="grid gap-10 pb-12 md:grid-cols-[1.4fr_1fr_1fr_1.4fr]">
           <div className="flex flex-col gap-4">
             <Logo />
@@ -65,7 +65,7 @@ export default function Footer() {
                   />
                   <button
                     type="submit"
-                    className="rounded-full bg-white px-4 py-2 text-xs font-medium text-black transition-colors duration-300 hover:bg-white/85"
+                    className="rounded-full bg-lime-300 px-4 py-2 text-xs font-medium text-black transition-colors duration-300 hover:bg-lime-200"
                   >
                     OK
                   </button>

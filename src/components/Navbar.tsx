@@ -37,7 +37,7 @@ export default function Navbar() {
           </a>
           <a
             href="#demo"
-            className="rounded-md border border-white/20 bg-white/15 px-4 py-2 text-xs text-white backdrop-blur-md transition-colors duration-300 hover:bg-white/25 sm:px-5 sm:text-sm"
+            className="rounded-full bg-lime-300 px-4 py-2 text-xs font-medium text-black transition-colors duration-300 hover:bg-lime-200 sm:px-5 sm:text-sm"
           >
             Demander une démo
           </a>

@@ -26,7 +26,7 @@ export function Eyebrow({ children }: { children: ReactNode }) {
 export function Heading({ children, className = '' }: { children: ReactNode; className?: string }) {
   return (
     <h2
-      className={`text-4xl font-semibold leading-[1.05] tracking-display text-white drop-shadow-lg sm:text-5xl lg:text-6xl ${className}`}
+      className={`text-3xl font-semibold leading-[1.08] tracking-display text-white drop-shadow-lg sm:text-4xl lg:text-5xl ${className}`}
     >
       {children}
     </h2>
@@ -35,7 +35,7 @@ export function Heading({ children, className = '' }: { children: ReactNode; cla
 
 export function Lead({ children, className = '' }: { children: ReactNode; className?: string }) {
   return (
-    <p className={`text-lg leading-relaxed tracking-snug text-white/85 drop-shadow-md sm:text-xl ${className}`}>
+    <p className={`text-base leading-relaxed tracking-snug text-white/80 drop-shadow-md sm:text-lg ${className}`}>
       {children}
     </p>
   );

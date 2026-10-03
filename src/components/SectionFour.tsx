@@ -15,8 +15,8 @@ export default function SectionFour() {
         <Reveal from="scale">
           <div className="mx-auto max-w-4xl rounded-3xl border border-white/15 bg-white/10 px-6 py-14 text-center backdrop-blur-xl sm:px-12 sm:py-16">
             <Eyebrow>Construit avec le terrain</Eyebrow>
-            <p className="mt-6 text-6xl font-semibold tracking-display text-white sm:text-7xl md:text-8xl">14</p>
-            <Heading className="mt-2 !text-3xl sm:!text-4xl lg:!text-5xl">
+            <p className="mt-6 text-6xl font-semibold tracking-display text-lime-300 sm:text-7xl">14</p>
+            <Heading className="mt-2 !text-2xl sm:!text-3xl lg:!text-4xl">
               associations construisent PilotAsso avec nous.
             </Heading>
             <Lead className="mx-auto mt-6 max-w-2xl">
@@ -67,14 +67,14 @@ export default function SectionFour() {
         <Reveal delay={500} className="mt-12 flex flex-wrap justify-center gap-3">
           <a
             href="#demo"
-            className="inline-flex items-center gap-1.5 rounded-full bg-white px-7 py-3.5 text-base font-medium tracking-snug text-black transition-colors duration-300 hover:bg-white/85"
+            className="inline-flex items-center gap-1.5 rounded-full bg-lime-300 px-6 py-3 text-sm font-medium tracking-snug text-black shadow-[0_0_40px_-8px_rgba(190,242,100,0.6)] transition-colors duration-300 hover:bg-lime-200 sm:text-base"
           >
             Réserver ma démo gratuite
             <ChevronRight size={16} />
           </a>
           <a
             href="#abonnement"
-            className="rounded-full border border-white/25 bg-white/10 px-7 py-3.5 text-base text-white backdrop-blur-md transition-colors duration-300 hover:bg-white/20"
+            className="rounded-full border border-white/25 bg-white/10 px-6 py-3 text-sm text-white sm:text-base backdrop-blur-md transition-colors duration-300 hover:bg-white/20"
           >
             S'abonner
           </a>
