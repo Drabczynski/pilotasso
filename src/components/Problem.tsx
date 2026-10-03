@@ -11,7 +11,7 @@ const files = [
 
 export default function Problem() {
   return (
-    <Section className="pt-28 sm:pt-36">
+    <Section className="overflow-x-clip pt-28 sm:pt-36">
       <div className="grid items-center gap-16 lg:grid-cols-[1.1fr_1fr]">
         <div>
           <Reveal>

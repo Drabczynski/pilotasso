@@ -51,7 +51,7 @@ export default function DarkZone({ hero, messages }: { hero: ReactNode; messages
   }, []);
 
   return (
-    <div className="relative" style={{ height: layout ? layout.height : undefined }}>
+    <div className="relative overflow-x-clip" style={{ height: layout ? layout.height : undefined }}>
       <div ref={heroRef}>{hero}</div>
       {messages.map((message, i) => (
         <div

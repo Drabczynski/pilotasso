@@ -16,7 +16,7 @@ interface UseCase {
   orientation: 'portrait' | 'landscape';
   title: string;
   eyebrow: string;
-  photo: string; // path under /public
+  photo: string; // Unsplash photo id (Unsplash License), or a local path under /public
   alt: string;
   body: string;
   points: string[];
@@ -28,8 +28,8 @@ const CASES: UseCase[] = [
     orientation: 'portrait',
     eyebrow: 'Gouvernance',
     title: 'Préparer le conseil d’administration en une heure',
-    photo: '/images/cas/echange.jpg',
-    alt: 'Un bénévole échange avec une responsable associative autour d’une table',
+    photo: 'photo-1573164574572-cb89e39749b4',
+    alt: 'Une équipe réunie autour d’une table avec des ordinateurs',
     body: 'Les chiffres clés, l’avancement des projets et les décisions à prendre sont déjà rassemblés. Vous arrivez au CA avec une vision claire, sans passer trois soirées à consolider des tableurs.',
     points: ['Synthèse budgétaire prête à présenter', 'Suivi des décisions et des votes', 'Historique des CA et AG au même endroit'],
   },
@@ -38,44 +38,49 @@ const CASES: UseCase[] = [
     orientation: 'landscape',
     eyebrow: 'Finances',
     title: 'Suivre budget et trésorerie en temps réel',
-    photo: '/promo/office-140.jpg',
-    alt: 'Une équipe au travail dans les locaux de l’association',
+    photo: 'photo-1517048676732-d65bc937f952',
+    alt: 'Une réunion de travail autour de documents',
     body: 'Budget voté, réalisé et écarts se mettent à jour au fil des transactions. Les projections de trésorerie vous montrent les mois tendus avant qu’ils n’arrivent.',
     points: ['Budget et réalisé comparés en continu', 'Projection de trésorerie sur 12 mois', 'Alertes quand un poste dérive'],
   },
   {
     id: 2,
     orientation: 'portrait',
-    eyebrow: 'Projets',
-    title: 'Garder le fil de chaque projet',
-    photo: '/images/cas/atelier.jpg',
-    alt: 'Trois personnes préparent un projet autour d’un grand plan',
-    body: 'Chaque projet a son budget, ses financements et son activité. Vous savez où il en est, ce qu’il a coûté et ce qu’il reste à financer.',
-    points: ['Budget et financements par projet', 'Avancement partagé avec l’équipe', 'Bilans de projet générés pour les financeurs'],
+    eyebrow: 'Financements',
+    title: 'Ne plus rater un appel à projets',
+    photo: '/images/cas/ordinateur.jpg',
+    alt: 'Deux femmes travaillent ensemble sur un ordinateur portable',
+    body: 'PilotAsso repère les subventions et appels à projets adaptés à votre association et centralise toutes les échéances : dépôt, justificatifs, bilans.',
+    points: ['Opportunités filtrées selon votre activité', 'Calendrier unique des échéances', 'Suivi de chaque financeur'],
   },
   {
     id: 3,
     orientation: 'landscape',
-    eyebrow: 'Financements',
-    title: 'Ne plus rater un appel à projets',
-    photo: '/promo/office-168.jpg',
-    alt: 'Deux bénévoles consultent un ordinateur ensemble',
-    body: 'PilotAsso repère les subventions et appels à projets adaptés à votre association et centralise toutes les échéances : dépôt, justificatifs, bilans.',
-    points: ['Opportunités filtrées selon votre activité', 'Calendrier unique des échéances', 'Suivi de chaque financeur'],
+    eyebrow: 'Projets',
+    title: 'Garder le fil de chaque projet',
+    photo: 'photo-1542744173-8e7e53415bb0',
+    alt: 'Une personne présente un projet à son équipe',
+    body: 'Chaque projet a son budget, ses financements et son activité. Vous savez où il en est, ce qu’il a coûté et ce qu’il reste à financer.',
+    points: ['Budget et financements par projet', 'Avancement partagé avec l’équipe', 'Bilans de projet générés pour les financeurs'],
   },
   {
     id: 4,
     orientation: 'portrait',
     eyebrow: 'Automatisation',
     title: 'Classer les dépenses sans y passer la soirée',
-    photo: '/images/cas/ordinateur.jpg',
-    alt: 'Deux femmes travaillent ensemble sur un ordinateur portable',
+    photo: 'photo-1787647561633-dcbbad61f227',
+    alt: 'Une bénévole souriante travaille sur son ordinateur',
     body: 'Les transactions bancaires arrivent toutes seules et sont classées automatiquement par poste et par projet. Il ne reste qu’à valider.',
     points: ['Synchronisation bancaire', 'Catégorisation automatique', 'Moins de saisie, moins d’erreurs'],
   },
 ];
 
-const photoUrl = (c: UseCase, _w?: number) => c.photo;
+const photoUrl = (c: UseCase, w: number) =>
+  c.photo.startsWith('/')
+    ? c.photo
+    : `https://images.unsplash.com/${c.photo}?auto=format&fit=crop&w=${w}&h=${Math.round(
+    c.orientation === 'portrait' ? w * 1.25 : w * 0.625,
+  )}&q=80`;
 
 interface Slot {
   x: number;
@@ -87,18 +92,18 @@ interface Slot {
 
 const SLOTS_DESKTOP: Slot[] = [
   { x: 0, y: 0, rotate: 1.5, scale: 1, zIndex: 50 },
-  { x: 190, y: -30, rotate: 12, scale: 0.9, zIndex: 40 },
-  { x: -180, y: -10, rotate: -14, scale: 0.89, zIndex: 30 },
-  { x: 110, y: 70, rotate: 8, scale: 0.86, zIndex: 20 },
-  { x: -130, y: 60, rotate: -9, scale: 0.84, zIndex: 10 },
+  { x: 290, y: -40, rotate: 11, scale: 0.9, zIndex: 40 },
+  { x: -280, y: -14, rotate: -12, scale: 0.89, zIndex: 30 },
+  { x: 170, y: 90, rotate: 7, scale: 0.86, zIndex: 20 },
+  { x: -190, y: 80, rotate: -8, scale: 0.84, zIndex: 10 },
 ];
 
 const SLOTS_MOBILE: Slot[] = [
   { x: 0, y: 0, rotate: 1, scale: 1, zIndex: 50 },
-  { x: 80, y: -15, rotate: 6, scale: 0.92, zIndex: 40 },
-  { x: -75, y: 20, rotate: -7, scale: 0.91, zIndex: 30 },
-  { x: 50, y: 35, rotate: 4, scale: 0.88, zIndex: 20 },
-  { x: -50, y: 25, rotate: -4.5, scale: 0.87, zIndex: 10 },
+  { x: 70, y: -18, rotate: 6, scale: 0.92, zIndex: 40 },
+  { x: -66, y: 22, rotate: -7, scale: 0.91, zIndex: 30 },
+  { x: 44, y: 40, rotate: 4, scale: 0.88, zIndex: 20 },
+  { x: -44, y: 30, rotate: -4.5, scale: 0.87, zIndex: 10 },
 ];
 
 const SPRING = { type: 'spring' as const, stiffness: 280, damping: 26 };
@@ -145,7 +150,7 @@ function DetailModal({ item, onClose }: { item: UseCase; onClose: () => void }) 
         transition={{ type: 'spring', stiffness: 320, damping: 30 }}
       >
         <div className="relative h-56 overflow-hidden sm:h-64">
-          <img src={photoUrl({ ...item, orientation: 'landscape' }, 1200)} alt={item.alt} className="h-full w-full object-cover object-[center_30%]" />
+          <img src={photoUrl({ ...item, orientation: 'landscape' }, 1200)} alt={item.alt} className="h-full w-full object-cover" />
           <div className="absolute inset-0 bg-gradient-to-t from-ink/50 to-transparent" />
           <span className="absolute bottom-4 left-6 rounded-full bg-lime-300 px-3 py-1 text-xs font-semibold text-ink">
             {item.eyebrow}
@@ -262,13 +267,13 @@ function CardStack({ onOpen }: { onOpen: (item: UseCase) => void }) {
   const front = CASES.find((c) => c.id === order[0])!;
 
   return (
-    <div ref={containerRef} className="relative mx-auto flex w-full max-w-4xl flex-col items-center gap-8">
+    <div ref={containerRef} className="relative mx-auto flex w-full max-w-6xl flex-col items-center gap-8">
       <div
         role="group"
         aria-label="Cas d’usage PilotAsso"
         aria-describedby="cases-hint"
         className="relative flex w-full select-none items-center justify-center"
-        style={{ perspective: '1400px', height: 'clamp(380px, 46vw, 500px)' }}
+        style={{ perspective: '1600px', height: isMobile ? 460 : 'clamp(520px, 62vw, 720px)' }}
       >
         {CASES.map((card) => {
           const slotIndex = order.indexOf(card.id);
@@ -277,11 +282,11 @@ function CardStack({ onOpen }: { onOpen: (item: UseCase) => void }) {
           const isLandscape = card.orientation === 'landscape';
           const widthClass = isLandscape
             ? isMobile
-              ? 'w-[clamp(220px,64vw,280px)]'
-              : 'w-[clamp(260px,30vw,360px)]'
+              ? 'w-[clamp(260px,80vw,330px)]'
+              : 'w-[clamp(380px,40vw,540px)]'
             : isMobile
-              ? 'w-[clamp(160px,46vw,200px)]'
-              : 'w-[clamp(190px,22vw,250px)]';
+              ? 'w-[clamp(210px,62vw,260px)]'
+              : 'w-[clamp(270px,27vw,360px)]';
 
           return (
             <motion.div
@@ -312,7 +317,7 @@ function CardStack({ onOpen }: { onOpen: (item: UseCase) => void }) {
                 dragDelta.current = info.offset.x;
               }}
               onDragEnd={handleDragEnd}
-              className={`absolute ${widthClass} rounded-[20px] outline-none ${RING}`}
+              className={`absolute ${widthClass} rounded-[24px] outline-none ${RING}`}
               style={{ cursor: isFocus ? 'grab' : 'pointer', zIndex: slot.zIndex }}
               initial={reduceMotion ? false : { opacity: 0, scale: 0.5, y: 60 }}
               animate={
@@ -324,7 +329,7 @@ function CardStack({ onOpen }: { onOpen: (item: UseCase) => void }) {
               whileTap={isFocus ? { cursor: 'grabbing' } : undefined}
             >
               <motion.div
-                className="relative flex w-full flex-col rounded-[20px] bg-white p-2.5 ring-1 ring-ink/[0.08]"
+                className="relative flex w-full flex-col rounded-[24px] bg-white p-3 ring-1 ring-ink/[0.08]"
                 style={{ boxShadow: isFocus ? SHADOW_FOCUS : SHADOW_REST }}
                 animate={
                   reduceMotion
@@ -334,20 +339,20 @@ function CardStack({ onOpen }: { onOpen: (item: UseCase) => void }) {
                 transition={reduceMotion ? undefined : { duration: 7 + card.id * 0.6, repeat: Infinity, ease: 'easeInOut' }}
               >
                 <div className="relative px-3 pb-2 pt-3">
-                  <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-ink/45">{card.eyebrow}</p>
-                  <p className="mt-1 line-clamp-2 min-h-[2.6em] pr-10 text-[15px] font-semibold leading-tight tracking-snug text-ink">
+                  <p className="text-xs font-semibold uppercase tracking-[0.12em] text-ink/45 sm:text-[13px]">{card.eyebrow}</p>
+                  <p className="mt-1 line-clamp-2 min-h-[2.6em] pr-12 text-[17px] font-semibold leading-tight tracking-snug text-ink sm:text-xl">
                     {card.title}
                   </p>
                   {isFocus && (
                     <motion.span
                       aria-hidden
-                      className="absolute right-2 top-3 flex h-9 w-9 items-center justify-center rounded-xl bg-ink text-lime-300 shadow-lg"
+                      className="absolute right-2 top-3 flex h-11 w-11 items-center justify-center rounded-xl bg-ink text-lime-300 shadow-lg"
                       initial={{ opacity: 0, scale: 0.8 }}
                       animate={{ opacity: 1, scale: 1 }}
                       whileHover={{ scale: 1.1 }}
                       transition={SPRING}
                     >
-                      <Plus size={18} strokeWidth={2.5} />
+                      <Plus size={22} strokeWidth={2.5} />
                     </motion.span>
                   )}
                 </div>
