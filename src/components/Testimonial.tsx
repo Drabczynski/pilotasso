@@ -57,7 +57,7 @@ export default function Testimonial() {
         sizes="100vw"
         alt="Une bénévole souriante à son bureau, dans les locaux de l’association"
         loading="lazy"
-        className="absolute inset-0 h-full w-full scale-[1.15] object-cover object-[68%_center] will-change-transform"
+        className="absolute inset-0 h-full w-full scale-[1.15] object-cover object-[58%_center] will-change-transform"
       />
       <div
         aria-hidden
