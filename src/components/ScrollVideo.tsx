@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 
-export const HERO_VIDEO_URL =
-  'https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260729_102822_0e6c87e8-c141-4744-bf32-ad30db296371.mp4';
+export const HERO_VIDEO_URL = '/video/hero.mp4';
+const HERO_POSTER_URL = '/video/hero-poster.jpg';
 
 const MIN_FRAMES = 24;
 const FRAMES_PER_SECOND = 24;
@@ -218,15 +218,12 @@ export default function ScrollVideo() {
 
   return (
     <div className="pointer-events-none fixed inset-0 z-0 overflow-hidden bg-[#0a0a0a]" aria-hidden>
-      {/* Poster: mist-toned fallback shown until the video has a frame */}
-      <div
-        className={`absolute inset-0 transition-opacity duration-500 ${
+      <img
+        src={HERO_POSTER_URL}
+        alt=""
+        className={`absolute inset-0 h-full w-full object-cover transition-opacity duration-500 ${
           hasFrame || framesReady ? 'opacity-0' : 'opacity-100'
         }`}
-        style={{
-          background:
-            'radial-gradient(60% 50% at 62% 42%, rgba(245,170,90,0.28) 0%, rgba(245,170,90,0) 60%), radial-gradient(90% 80% at 30% 20%, #7d8a99 0%, #4a5562 45%, #1d232b 100%)',
-        }}
       />
       {src && (
         <video
@@ -245,6 +242,14 @@ export default function ScrollVideo() {
         className={`absolute inset-0 h-full w-full transition-opacity duration-500 ${
           framesReady ? 'opacity-100' : 'opacity-0'
         }`}
+      />
+      {/* Transparent scrim: keeps white type legible over the bright office shots */}
+      <div
+        className="absolute inset-0"
+        style={{
+          background:
+            'linear-gradient(to bottom, rgba(10,10,10,0.55) 0%, rgba(10,10,10,0.25) 35%, rgba(10,10,10,0.3) 60%, rgba(10,10,10,0.7) 100%)',
+        }}
       />
     </div>
   );

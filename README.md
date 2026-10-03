@@ -20,5 +20,5 @@ npm run build
 
 - Les liens (`#demo`, `#tarifs`, …) sont des ancres provisoires à brancher sur les vraies pages.
 - La carte « Parlez à l'équipe » du hero accueille une photo (80×96 px) : remplacer l'icône par un portrait réel.
-- La vidéo de fond est servie depuis un CDN tiers : héberger une copie (ou votre propre vidéo) dont vous avez les droits.
+- La vidéo de fond est `public/video/hero.mp4` (sans audio, une image clé toutes les 4 images pour un scrub fluide) et son image de chargement `hero-poster.jpg`.
 - Le formulaire newsletter n'est pas encore relié à un service d'envoi.
